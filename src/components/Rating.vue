@@ -1,0 +1,98 @@
+<template>
+    <v-card >
+        <v-card-title>
+            Nutrition
+            <v-spacer></v-spacer>
+            <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+
+            ></v-text-field>
+        </v-card-title>
+        <v-data-table
+                :headers="headers"
+                :items="users_list"
+                :search="search"
+                disable-pagination
+
+                hide-default-footer
+        >
+
+            <template v-slot:item.add_button="{ item }">
+
+                <SharePointsDialog :item="item" @addpoints="addpoints"></SharePointsDialog>
+
+
+            </template>
+
+        </v-data-table>
+    </v-card>
+</template>
+
+<script>
+
+    import SharePointsDialog from "./SharePointsDialog";
+    export default {
+        name: "Rating",
+        components: {SharePointsDialog},
+        data () {
+            return {
+                editedIndex: -1,
+                editedItem: {},
+                dialog:false,
+                search: '',
+                headers: [
+                    // {
+                    //     text: 'Dessert (100g serving)',
+                    //     align: 'left',
+                    //     sortable: false,
+                    //     value: 'name',
+                    // },
+                    { text: 'Имя', value: 'first_name' },
+                    { text: 'Фамилия', value: 'last_name' },
+                    { text: 'Баллы спасибо', value: 'share_points' },
+                    { text: 'Копилка', value: 'personal_points' },
+                    { text: '', value: 'add_button', sortable: false , },
+                ],
+
+            }
+        },
+
+
+
+        computed: {
+            users_list(){
+                return this.$store.getters.users_list
+            },
+            user_id(){
+                return this.$store.getters.get_id_from_token
+            }
+
+        },
+        beforeCreate() {
+            this.$store.dispatch("getallusers").then(response=>{
+                    console.log(response)
+
+                }
+            )
+        },
+        methods:{
+            editItem (item) {
+                this.editedIndex = this.users_list.indexOf(item);
+                this.editedItem = Object.assign({}, item);
+                this.dialog = true
+            },
+            addpoints(data){
+                alert("ki");
+                this.$store.dispatch('addpoints',data);
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>
