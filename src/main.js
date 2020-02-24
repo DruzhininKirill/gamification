@@ -15,6 +15,7 @@ import Shop from "./components/Shop";
 import Login from "./components/Login";
 import Transactions from "./components/Transactions";
 import Rating from "./components/Rating";
+import Users from "./components/Users";
 
 Vue.config.productionTip = false;
 
@@ -48,8 +49,10 @@ const ifAuthenticated = (to, from, next) => {
 };
 
 
+
 const routes = [
   {path: '/', component: Main, beforeEnter: ifAuthenticated, meta: {title: "Главная"}},
+  {path: '/users', component: Users, beforeEnter: ifAuthenticated, meta: {title: "Коллеги"}},
   {path: '/shop', component: Shop, beforeEnter: ifAuthenticated, meta: {title: "Маркетплейс"}},
   {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
   {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},

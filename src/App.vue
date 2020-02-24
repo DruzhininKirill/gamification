@@ -30,9 +30,18 @@
           </v-list-item-content>
         </v-list-item>
 
+          <v-list-item link to="/users">
+              <v-list-item-action>
+                  <v-icon>supervised_user_circle</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                  <v-list-item-title>Коллеги</v-list-item-title>
+              </v-list-item-content>
+          </v-list-item>
+
         <v-list-item link to="/rating">
           <v-list-item-action>
-            <v-icon>supervised_user_circle</v-icon>
+            <v-icon>score</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Рейтинг</v-list-item-title>

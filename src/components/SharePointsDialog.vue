@@ -39,13 +39,15 @@
                         :max=user.share_points
                         min="1"
                 ></v-slider>
-<!--                <span v-show="user.points=1">1</span>-->
                 <v-text-field
+                        v-if="Number.parseInt( user.share_points)>0"
                         v-model="comment"
                         type="text"
                         color="indigo"
                         label="Комментарий"
                 ></v-text-field>
+                <span v-else>Недостаточно средств</span>
+
             </v-card-text>
 
             <v-divider></v-divider>
@@ -53,12 +55,22 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
+                        color="secondary"
+                        left
+                        @click.native="dialog=false"
+                >
+                    Назад
+                </v-btn>
+
+
+                <v-btn v-if="Number.parseInt( user.share_points)>0"
                         color="primary"
-                        outlined
+
                         @click.native="sendpoints"
                 >
                     Спасибо
                 </v-btn>
+
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -90,17 +102,29 @@
 
         methods:{
             sendpoints(){
-                // this.dialog = false;
-                alert("lol");
-                this.$emit('addpoints',{
+                this.$store.dispatch('addpoints',{
                     to_user: this.item.id,
                     from_user: this.user.id,
                     amount: this.value,
                     comment:this.comment,
+                    category: 1
                 });
 
-                // this.comment= "";
-                // this.value = 1;
+                // alert("lol");
+                // this.$emit('addpoints',{
+                //     to_user: this.item.id,
+                //     from_user: this.user.id,
+                //     amount: this.value,
+                //     comment:this.comment,
+                //     category: 1
+                // });
+
+                this.dialog = false;
+                this.comment= "";
+                this.value = 1
+
+
+
             }
         }
 
