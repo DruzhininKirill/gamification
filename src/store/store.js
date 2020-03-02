@@ -13,8 +13,8 @@ export const store = new Vuex.Store({
         token_a: localStorage.getItem('auth_token_access') || "0",
         shop_items:[],
         transactions:[],
-        categories:[]
-
+        categories:[],
+        logged_user:{},
 
 
     },
@@ -39,17 +39,17 @@ export const store = new Vuex.Store({
 
 
         logged_user(state){
-            return state.users_list.find(user=> user.id === store.getters.get_id_from_token)
+            return state.logged_user
         },
         token_a(state){
             return state.token_a
         },
 
         loggedIn(state){
-            console.log(state.token_a.toString());
-            // console.log(state.token == null);
             return state.token_a !== "0";
-
+        },
+        permissioned(state){
+            return (state.logged_user.is_staff || state.logged_user.is_teamlead);
         },
         get_id_from_token(state){
             const base64url = state.token_a.split('.')[1]
@@ -85,20 +85,20 @@ export const store = new Vuex.Store({
             state.logged_user_id = user_id;
         },
         set_logged_user(state, data) {
-            let index = data.findIndex(user => user.id === state.logged_user_id);
-            console.log(index);
+            let index = data.findIndex(user => user.id === store.getters.get_id_from_token);
+            // console.log(index);
             state.logged_user = state.users_list[index];
         },
         //changers
         changeuser(state, data){
             let index = state.users_list.findIndex(user => user.id == data.id);
-            console.log(index);
+            // console.log(index);
             state.users_list.splice(index,1,data)
         },
         from_to_user(state, data){
             let index1 = state.users_list.findIndex(user => user.id == data.from_user);
             let index2 = state.users_list.findIndex(user => user.id == data.to_user);
-            console.log(data);
+            // console.log(data);
             state.users_list[index1].share_points = Number.parseInt(state.users_list[index1].share_points) - data.amount;
             state.users_list[index2].personal_points = Number.parseInt(state.users_list[index2].personal_points) + data.amount;
         },
@@ -126,7 +126,7 @@ export const store = new Vuex.Store({
                         console.log(response.data);
                         const token_a = response.data.access;
                         const token_r = response.data.refresh;
-                        const base64url = token_a.split('.')[1]
+                        const base64url = token_a.split('.')[1];
                         const base64 = base64url.replace('-','+').replace('-','/');
                         const user_id = JSON.parse(window.atob(base64)).user_id;
                         context.commit('set_logged_user_id', user_id);
@@ -134,6 +134,7 @@ export const store = new Vuex.Store({
                         localStorage.setItem("auth_token_refresh", token_r);
                         context.commit('retrieveToken_r', token_r);
                         context.commit('retrieveToken_a', token_a);
+
 
                         resolve(response)
                         // console.log("token!: " + token);
@@ -170,20 +171,22 @@ export const store = new Vuex.Store({
                     password: credentials.password
                 })
                     .then(response => {
-                        console.log(response)
+                        // console.log(response)
                         const token_r = response.data.refresh;
                         const token_a = response.data.access;
                         const base64url = token_a.split('.')[1]
                         const base64 = base64url.replace('-','+').replace('-','/');
-                        const user_id = JSON.parse(window.atob(base64)).user_id
+                        const user_id = JSON.parse(window.atob(base64)).user_id;
                         context.commit('set_logged_user_id', user_id);
                         localStorage.setItem("auth_token_refresh", token_r);
                         localStorage.setItem("auth_token_access", token_a);
                         context.commit('retrieveToken_r', token_r);
                         context.commit('retrieveToken_a', token_a);
                         // const loggedUser = credentials.username;
-
-
+                        // context.dispatch('getallusers').then(response =>{
+                        //
+                        //     resolve
+                        // });
 
                         resolve(response)
                         // console.log("token!: " + token);
@@ -206,6 +209,7 @@ export const store = new Vuex.Store({
                         let c_user = data_users.find(user => user.id === store.getters.get_id_from_token);
                         localStorage.setItem("c_user", c_user.first_name + " " + c_user.last_name);
                         context.commit("set_users_list", data_users);
+                        context.commit("set_logged_user", data_users);
                         resolve(response)
 
                     })
@@ -228,7 +232,7 @@ export const store = new Vuex.Store({
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
             {
-                HTTP.get('/transaction/')
+                HTTP.get('/transactions/')
                     .then(response => {
                         let data_transactions = Array.from(response.data);
                         context.commit("set_transactions", data_transactions);
@@ -282,10 +286,10 @@ export const store = new Vuex.Store({
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
             {
-                HTTP.post('/transaction/', data)
+                HTTP.post('/transactions/', data)
                     .then(response => {
-                        console.log("KIKIKI");
-                        console.log(response.data);
+                        // console.log("KIKIKI");
+                        // console.log(response.data);
                         context.commit("from_to_user", data);
                         resolve(response)
 
@@ -327,15 +331,30 @@ export const store = new Vuex.Store({
                 console.log("Произашла ошибка: " + JSON.stringify(status));
         },
 
-        adduser: async (context, user)=>{
-            HTTP.defaults.headers.common['Authorization'] = "Token " + context.state.token;
-            let {status, data} = await HTTP.post("auth/users/", user);
-            console.log(JSON.stringify(data));
-            if (status == 201){
-                context.commit('adduser', data);
-            }else
-                console.log("Произашла ошибка: " + JSON.stringify(status));
+        add_new_user: async (context, user)=>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/users/', user)
+                    .then(response => {
+                        // console.log("KIKIKI");
+                        console.log(response.data);
+                        // context.commit("from_to_user", data);
+                        resolve(response)
 
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        if (error.response.status === 401) {
+                            localStorage.setItem("auth_token_access", 0);
+
+                            window.location.reload(true)
+                        }
+
+                        console.log(error);
+                        reject(error)
+                    })
+            })
 
         },
 

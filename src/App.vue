@@ -13,7 +13,7 @@
 
         <v-list-item-content>
 <!--          <v-list-item-title >{{user().first_name}} {{user().last_name}}</v-list-item-title>-->
-          <v-list-item-title >{{user()}}</v-list-item-title>
+          <v-list-item-title >{{user_fio()}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -75,6 +75,15 @@
           </v-list-item-content>
         </v-list-item>
 
+        <v-list-item link to="/special" v-if="permissioned">
+          <v-list-item-action>
+            <v-icon>settings</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Cпециальные возможности</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
         <v-list-item link v-if="loggedIn" v-on:click="logout">
           <v-list-item-action  >
             <v-icon>exit_to_app</v-icon>
@@ -93,7 +102,7 @@
             dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Gamification</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
@@ -126,11 +135,17 @@
       source: String,
     },
     data: () => ({
-      drawer: false,
+      drawer: true,
     }),
     computed: {
       loggedIn() {
         return this.$store.getters.loggedIn;
+      },
+      permissioned() {
+        return this.$store.getters.permissioned;
+      },
+      user() {
+        return this.$store.getters.logged_user;
       },
 
 
@@ -140,10 +155,11 @@
         this.$store.dispatch('destroyToken')
 
       },
-      user(){
-        return localStorage.getItem("c_user")
-        // return this.$store.getters.users_list.find(user => user.id === this.$store.getters.get_id_from_token) || "Vladimir Putin"
-      }
+        user_fio(){
+          if (this.user.first_name == undefined) return ' ';
+          else return this.user.first_name + " " +this.user.last_name
+        }
+
 
 
     }

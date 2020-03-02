@@ -76,7 +76,7 @@
                     .then(response =>{
                         //
                         if (response.statusText=="OK"){
-                            // alert("ki");
+                            // this.$store.dispatch('getallusers');
                             this.$router.push('/');
                             // лучше, но что то тупое с топнавбаром, остается заголовок логина
                         }

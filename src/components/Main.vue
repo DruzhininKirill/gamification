@@ -2,28 +2,96 @@
 <!--    <div class="dashboard">-->
 
 <!--        <v-container class="my-5">-->
-            <v-layout row wrap>
-                <v-flex xs12 md6>
+            <v-layout row wrap align-content-center >
+                <v-flex xs12 sm12 md6 >
 
-                    <v-card class="ma-3" min-width="fit-content">
-                        <v-responsive class="pt-4">
-                            img
-                        </v-responsive>
-                        <v-card-text>
-                            <div class="title black--text">{{ user.first_name}} {{ user.last_name}}</div>
-                            <div class="subtitle-2">postition</div>
-                            <div class="subtitle-2">{{user.email}}</div>
-                            <div class="subtitle-2"> О себе:
-                                <v-card-text>
-                                {{user.profile}}
-                                </v-card-text>
-                            </div>
-                            <v-spacer></v-spacer>
-                            <v-divider></v-divider>
-                            <div class="subtitle-2">{{user.personal_points}}</div>
-                            <div class="subtitle-2">{{user.share_points}}</div>
-                        </v-card-text>
+                    <v-card class="mx-auto ma-3 " max-width="500" min-width="300" min-height="100%" >
+                        <v-toolbar  color="primary" dark>
+                            <v-toolbar-title>User Profile</v-toolbar-title>
+                        </v-toolbar>
+                        <v-tabs centered >
+                            <v-tab>
+                                <v-icon left>person</v-icon>
+                                Профиль
+                            </v-tab>
+                            <v-tab>
+                                <v-icon left>book</v-icon>
+                                Статистика
+                            </v-tab>
+                            <v-tab>
+                                <v-icon left>edit</v-icon>
+                                Изменить
+                            </v-tab>
+
+                            <v-tab-item>
+                                <v-card flat >
+                                    <v-layout row wrap>
+                                        <v-flex class="mx-auto">
+                                            <v-avatar size="150" class="grey lighten-5 ma-3">
+                                                <img src="https://randomuser.me/api/portraits/men/78.jpg">
+                                            </v-avatar>
+                                        </v-flex>
+                                        <v-flex >
+                                            <v-card-text>
+                                                <div class="title black--text " >{{ user.first_name}} {{ user.last_name}}</div>
+                                                <div class="subtitle-2">{{user.position}}</div>
+                                                <div class="subtitle-2">{{user.email}}</div>
+                                                <div class="subtitle-2"> О себе:
+                                                    <v-card-text>
+                                                        {{user.profile}}
+                                                    </v-card-text>
+                                                </div>
+
+                                            </v-card-text>
+                                        </v-flex>
+                                    </v-layout>
+                                    <v-spacer></v-spacer>
+                                    <v-divider></v-divider>
+                                    <div class="subtitle-2">{{user.personal_points}}</div>
+                                    <div class="subtitle-2">{{user.share_points}}</div>
+                                </v-card>
+                            </v-tab-item>
+                            <v-tab-item>
+                                <v-card flat>
+                                    <v-card-text>
+                                        <p>
+                                            Morbi nec metus. Suspendisse faucibus, nunc et pellentesque egestas, lacus ante convallis tellus, vitae iaculis lacus elit id tortor. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Nunc sed turpis.
+                                        </p>
+
+                                        <p>
+                                            Suspendisse feugiat. Suspendisse faucibus, nunc et pellentesque egestas, lacus ante convallis tellus, vitae iaculis lacus elit id tortor. Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi mauris ac eros. In hac habitasse platea dictumst. Fusce ac felis sit amet ligula pharetra condimentum.
+                                        </p>
+
+                                        <p>
+                                            Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Nam commodo suscipit quam. In consectetuer turpis ut velit. Sed cursus turpis vitae tortor. Aliquam eu nunc.
+                                        </p>
+
+                                        <p>
+                                            Etiam ut purus mattis mauris sodales aliquam. Ut varius tincidunt libero. Aenean viverra rhoncus pede. Duis leo. Fusce fermentum odio nec arcu.
+                                        </p>
+
+                                        <p class="mb-0">
+                                            Donec venenatis vulputate lorem. Aenean viverra rhoncus pede. In dui magna, posuere eget, vestibulum et, tempor auctor, justo. Fusce commodo aliquam arcu. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi.
+                                        </p>
+                                    </v-card-text>
+                                </v-card>
+                            </v-tab-item>
+                            <v-tab-item>
+                                <v-card flat>
+                                    <v-card-text>
+                                        <p>
+                                            Fusce a quam. Phasellus nec sem in justo pellentesque facilisis. Nam eget dui. Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi mauris ac eros. In dui magna, posuere eget, vestibulum et, tempor auctor, justo.
+                                        </p>
+
+                                        <p class="mb-0">
+                                            Cras sagittis. Phasellus nec sem in justo pellentesque facilisis. Proin sapien ipsum, porta a, auctor quis, euismod ut, mi. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nam at tortor in tellus interdum sagittis.
+                                        </p>
+                                    </v-card-text>
+                                </v-card>
+                            </v-tab-item>
+                        </v-tabs>
                     </v-card>
+
 <!--                    {{user}}-->
                 </v-flex>
                 <v-flex xs12 md6>
@@ -40,12 +108,23 @@
                             <v-toolbar-title>Мои переводы</v-toolbar-title>
 
                             <v-spacer></v-spacer>
+                            <span>новый</span>
+
+
+                            <template >
+                                <SharePointsMultitalk :item=user ></SharePointsMultitalk>
+<!--                                должен быть не юзер, а рандомный кто-то-->
+                            </template>
+
+
+
 
                         </v-toolbar>
-                        <v-list>
+                        <v-list max-height="300" class="overflow-y-auto">
                             <v-list-item
                                     v-for="item in transactions_from_me"
                                     :key="item.id"
+
 
                             >
                                 <v-list-item-icon>
@@ -64,15 +143,16 @@
                                     <v-list-item-title v-text="item.amount"> </v-list-item-title>
                                 </v-list-item-content>
 
-                                <v-list-item-avatar>
-                                    <v-img :src="item.avatar"></v-img>
-                                </v-list-item-avatar>
+<!--                                <v-list-item-avatar>-->
+<!--                                    <v-img :src="item.avatar"></v-img>-->
+<!--                                </v-list-item-avatar>-->
                             </v-list-item>
                         </v-list>
                     </v-card>
 
                     <v-card
                             max-width="500"
+                            max-height="360"
                             class="mx-auto ma-3"
                     >
                         <v-toolbar
@@ -86,7 +166,7 @@
                             <v-spacer></v-spacer>
 
                         </v-toolbar>
-                        <v-list>
+                        <v-list max-height="300" class="overflow-y-auto">
                             <v-list-item
                                     v-for="item in transactions_to_me"
                                     :key="item.id"
@@ -100,9 +180,17 @@
                                     <v-list-item-title v-text="get_user_by_id(item.from_user) "></v-list-item-title>
                                 </v-list-item-content>
 
-                                <v-list-item-avatar>
-                                    <v-img :src="item.avatar"></v-img>
-                                </v-list-item-avatar>
+                                <v-list-item-content>
+                                    <v-list-item-title v-text="get_cat_by_id(item.category)"> </v-list-item-title>
+                                </v-list-item-content>
+
+                                <v-list-item-content>
+                                    <v-list-item-title v-text="item.amount"> </v-list-item-title>
+                                </v-list-item-content>
+
+<!--                                <v-list-item-avatar>-->
+<!--                                    <v-img :src="item.avatar"></v-img>-->
+<!--                                </v-list-item-avatar>-->
                             </v-list-item>
                         </v-list>
                     </v-card>
@@ -116,12 +204,18 @@
 </template>
 
 <script>
+    import SharePointsMultitalk from "./SharePointsMultitalk";
     export default {
         name: "Main",
-
+        components: {SharePointsMultitalk},
         data:()=>({
-
+            dialog:false,
         }),
+        beforeCreate() {
+            this.$store.dispatch("getallusers");
+            this.$store.dispatch("get_all_categories");
+            this.$store.dispatch("get_transactions");
+        },
 
 
         computed: {
@@ -143,11 +237,7 @@
 
 
         },
-        beforeCreate() {
-            this.$store.dispatch("getallusers");
-            this.$store.dispatch("get_all_categories");
-            this.$store.dispatch("get_transactions");
-        },
+
         methods:{
             refresh() {
                 this.$store.dispatch("refreshToken").then(response => {

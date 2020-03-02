@@ -1,7 +1,7 @@
 <template>
     <v-dialog
             v-model="dialog"
-            width=500
+            width=600
     >
         <template v-slot:activator="{ on }">
             <v-btn color="indigo" v-if="item.id!==user.id" dark class="ml-1" v-on="on" >Добавить</v-btn>

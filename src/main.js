@@ -16,6 +16,7 @@ import Login from "./components/Login";
 import Transactions from "./components/Transactions";
 import Rating from "./components/Rating";
 import Users from "./components/Users";
+import Special from "./components/Special";
 
 Vue.config.productionTip = false;
 
@@ -33,7 +34,7 @@ Vue.use(VueRouter);
 
 const ifNotAuthenticated = (to, from, next) => {
   if (!store.getters.loggedIn) {
-    next()
+    next();
     return
   }
   document.title =to.meta.title;
@@ -47,6 +48,18 @@ const ifAuthenticated = (to, from, next) => {
   }
   next('/login')
 };
+const ifPermissioned = (to, from, next) => {
+  // alert( store.getters.loggedIn);
+  // alert(store.getters.permissioned);
+
+  if (store.getters.loggedIn && store.getters.permissioned) {
+      next();
+      return
+  }
+  // alert("KIK");
+  // console.log("kik");
+  next('/login')
+};
 
 
 
@@ -57,6 +70,7 @@ const routes = [
   {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
   {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},
   {path: '/feedback', component: Feedback, beforeEnter: ifAuthenticated, meta: {title: "Обратная связь"}},
+  {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"}},
   {path: '/login', component: Login, beforeEnter: ifNotAuthenticated, meta: {title: "Необходима авторизация"}},
 ];
 

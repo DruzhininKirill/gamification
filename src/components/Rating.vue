@@ -67,17 +67,14 @@
             users_list(){
                 return this.$store.getters.users_list
             },
-            user_id(){
-                return this.$store.getters.get_id_from_token
-            }
+            // user_id(){
+            //     return this.$store.getters.get_id_from_token
+            // }
 
         },
         beforeCreate() {
-            this.$store.dispatch("getallusers").then(response=>{
-                    console.log(response)
+            this.$store.dispatch("getallusers")
 
-                }
-            )
         },
         methods:{
             editItem (item) {
@@ -86,7 +83,7 @@
                 this.dialog = true
             },
             addpoints(data){
-                alert("ki");
+                // alert("ki");
                 this.$store.dispatch('addpoints',data);
             }
         }
