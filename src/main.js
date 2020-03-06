@@ -17,6 +17,9 @@ import Transactions from "./components/Transactions";
 import Rating from "./components/Rating";
 import Users from "./components/Users";
 import Special from "./components/Special";
+import UserManagement from "./components/UserManagement";
+import SpecialMenu from "./components/SpecialMenu";
+import MarketManagement from "./components/MarketManagement";
 
 Vue.config.productionTip = false;
 
@@ -70,7 +73,27 @@ const routes = [
   {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
   {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},
   {path: '/feedback', component: Feedback, beforeEnter: ifAuthenticated, meta: {title: "Обратная связь"}},
-  {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"}},
+  {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"},
+    children: [
+      {
+        path: '',
+        component: SpecialMenu,
+        meta: {title:"Cпециальные возможности"}
+      },
+      {
+        path: 'usermanagement',
+        component: UserManagement,
+        meta: {title:"Управление пользователями"}
+      },
+      {
+        path: 'marketmanagement',
+        component: MarketManagement,
+        meta: {title:"Управление маркетплейсом"}
+      },
+    ]},
+
+
+
   {path: '/login', component: Login, beforeEnter: ifNotAuthenticated, meta: {title: "Необходима авторизация"}},
 ];
 
@@ -90,7 +113,8 @@ router.beforeEach((to, from, next) => {
 
 
 export const HTTP = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/'
+  baseURL: 'http://localhost:8000/api/v1/',
+
 
 });
 

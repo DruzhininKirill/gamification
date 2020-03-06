@@ -4,6 +4,41 @@ import axios from "axios";
 export const HTTP = axios.create({
     baseURL: 'http://localhost:8000/api/v1/'});
 
+
+HTTP.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    return config;
+}, function (error) {
+
+    return Promise.reject(error);
+});
+
+
+let refreshTokenPromise;
+HTTP.interceptors.response.use(function (response) {
+    return response;
+}, async (error) => {
+    if (error.response.data.detail == 'Given token not valid for any token type') {
+        if (!refreshTokenPromise) {
+            refreshTokenPromise = store.dispatch('refreshToken');
+        }
+        await refreshTokenPromise;
+        refreshTokenPromise = null;
+        error.config.headers.Authorization = "Bearer " + store.getters.token_a;
+        return HTTP(error.config);
+
+    }
+    if (error.response.data.detail == 'Token is invalid or expired') {
+      localStorage.setItem("auth_token_access", 0);
+      localStorage.setItem("auth_token_refresh", 0);
+      window.location.reload();
+    }
+
+     return Promise.reject(error);
+
+});
+
+
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
@@ -61,8 +96,8 @@ export const store = new Vuex.Store({
 
         //adding smth new to lists
 
-        adduser(state, newuser){
-            state.users_list.push(newuser)
+        add_user(state, user){
+            state.users_list.push(user)
         },
         //setters
         retrieveToken_r(state, token){
@@ -123,7 +158,6 @@ export const store = new Vuex.Store({
 
                 })
                     .then(response => {
-                        console.log(response.data);
                         const token_a = response.data.access;
                         const token_r = response.data.refresh;
                         const base64url = token_a.split('.')[1];
@@ -134,18 +168,10 @@ export const store = new Vuex.Store({
                         localStorage.setItem("auth_token_refresh", token_r);
                         context.commit('retrieveToken_r', token_r);
                         context.commit('retrieveToken_a', token_a);
-
-
                         resolve(response)
-                        // console.log("token!: " + token);
 
                     })
                     .catch(error =>{
-                        console.log(error);
-                        // localStorage.setItem("auth_token_access", 0);
-                        // localStorage.setItem("auth_token_refresh", 0);
-                        //
-                        // window.location.reload(true)
                         reject(error)
                     }
             )
@@ -182,11 +208,6 @@ export const store = new Vuex.Store({
                         localStorage.setItem("auth_token_access", token_a);
                         context.commit('retrieveToken_r', token_r);
                         context.commit('retrieveToken_a', token_a);
-                        // const loggedUser = credentials.username;
-                        // context.dispatch('getallusers').then(response =>{
-                        //
-                        //     resolve
-                        // });
 
                         resolve(response)
                         // console.log("token!: " + token);
@@ -242,9 +263,8 @@ export const store = new Vuex.Store({
                     .catch(error =>{
                         console.log(error);
                         if (error.response.status === 401) {
-                            // context.dispatch('refreshToken');
-                            localStorage.setItem("auth_token_access", 0);
-                            window.location.reload(true)
+                            // localStorage.setItem("auth_token_access", 0);
+                            // window.location.reload(true)
                         }
 
                         console.log(error);
@@ -266,14 +286,7 @@ export const store = new Vuex.Store({
                     })
                     .catch(error =>{
                         console.log(error);
-                        if (error.response.status === 401) {
 
-                            localStorage.setItem("auth_token_access", 0);
-
-                            window.location.reload(true)
-                        }
-
-                        console.log(error);
                         reject(error)
                     })
             })
@@ -296,11 +309,33 @@ export const store = new Vuex.Store({
                     })
                     .catch(error =>{
                         console.log(error);
-                        if (error.response.status === 401) {
-                            localStorage.setItem("auth_token_access", 0);
+                        reject(error)
+                    })
+            })
 
-                            window.location.reload(true)
-                        }
+        },
+
+
+        edit_user: async (context, edit) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                let id = store.getters.get_id_from_token;
+                HTTP.put('/users/'+id+'/', edit)
+                    .then(response => {
+                        // console.log("KIKIKI");
+                        console.log(response.data);
+                        // context.commit("from_to_user", edit);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        // if (error.response.status === 401) {
+                        //     localStorage.setItem("auth_token_access", 0);
+                        //
+                        //     window.location.reload(true)
+                        // }
 
                         console.log(error);
                         reject(error)
@@ -311,17 +346,6 @@ export const store = new Vuex.Store({
 
 
 
-        changeuser: async (context, user)=>{
-            HTTP.defaults.headers.common['Authorization'] = "Token " + context.state.token;
-            let url = '/users/partly/'+user.id+'/';
-            console.log(JSON.stringify(user));
-            let {status, data} = await HTTP.put(url,user);
-            console.log(data);
-            if (status == 200){
-                context.commit('changeuser', data);
-            }else
-                console.log("Произашла ошибка: " + JSON.stringify(status));
-        },
         deleteuser: async (context, id)=>{
             let url = '/users/'+id+'/';
             let {status} = await HTTP.delete(url);
@@ -339,17 +363,18 @@ export const store = new Vuex.Store({
                     .then(response => {
                         // console.log("KIKIKI");
                         console.log(response.data);
-                        // context.commit("from_to_user", data);
+                        let newuser = response.data;
+                        context.commit("add_user", newuser);
                         resolve(response)
 
                     })
                     .catch(error =>{
                         console.log(error);
-                        if (error.response.status === 401) {
-                            localStorage.setItem("auth_token_access", 0);
-
-                            window.location.reload(true)
-                        }
+                        // if (error.response.status === 401) {
+                        //     localStorage.setItem("auth_token_access", 0);
+                        //
+                        //     window.location.reload(true)
+                        // }
 
                         console.log(error);
                         reject(error)

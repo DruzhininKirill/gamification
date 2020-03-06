@@ -1,13 +1,32 @@
 <template>
-        <router-view></router-view>
+    <v-layout row wrap >
+        <v-flex xs12 sm6 md4 lg4 v-for="section in sections" :key="section.id">
+            <v-card
+                    :color="section.color"
+                    class="d-flex justify-center  ma-3 "
+                    dark
+                    height="250"
+                    hover
+                    link :to="'/special/'+section.path"
+            >
+
+                <div class="align-self-center d-flex ">
+
+                    <v-icon  >{{section.icon}}</v-icon>
+                    <div>{{ section.name}}</div>
+                </div>
+
+            </v-card>
+
+        </v-flex>
+    </v-layout>
+
 </template>
 
 
 <script>
-    // import SpecialMenu from "./SpecialMenu";
     export default {
-        name: "Special",
-        // components: {SpecialMenu},
+        name: "SpecialMenu",
         data: () => ({
             sections:[
                 {
@@ -22,7 +41,7 @@
                     icon: 'book',
                     name: 'Маркетплейс',
                     color: 'purple',
-                    path:'usermanagement'
+                    path:'marketmanagement'
                 },
                 {
                     id: 3,
