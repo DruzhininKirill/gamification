@@ -7,7 +7,7 @@
     >
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-toolbar-title>My CRUD</v-toolbar-title>
+                <v-toolbar-title>Товары</v-toolbar-title>
                 <v-divider
                         class="mx-4"
                         inset
@@ -60,13 +60,13 @@
                     class="mr-2"
                     @click="editItem(item)"
             >
-                mdi-pencil
+                edit
             </v-icon>
             <v-icon
                     small
                     @click="deleteItem(item)"
             >
-                mdi-delete
+                delete
             </v-icon>
         </template>
         <template v-slot:no-data>
@@ -217,7 +217,7 @@
             close () {
                 this.dialog = false
                 setTimeout(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedItem = Object.assign({}, this.defaultItem);
                     this.editedIndex = -1
                 }, 300)
             },

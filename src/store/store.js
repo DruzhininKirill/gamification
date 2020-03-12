@@ -50,6 +50,7 @@ export const store = new Vuex.Store({
         transactions:[],
         categories:[],
         logged_user:{},
+        feedback_messages:[],
 
 
     },
@@ -70,6 +71,9 @@ export const store = new Vuex.Store({
 
         categories(state){
             return state.categories;
+        },
+        feedback_messages(state){
+            return state.feedback_messages;
         },
 
 
@@ -116,6 +120,10 @@ export const store = new Vuex.Store({
         set_categories(state, cats){
             state.categories = cats;
         },
+        set_feedback_messages(state, feedback){
+            state.feedback_messages = feedback;
+        },
+
         set_logged_user_id(state, user_id) {
             state.logged_user_id = user_id;
         },
@@ -125,14 +133,22 @@ export const store = new Vuex.Store({
             state.logged_user = state.users_list[index];
         },
         //changers
-        changeuser(state, data){
-            let index = state.users_list.findIndex(user => user.id == data.id);
+        edit_user(state, data){
+            let index = state.users_list.findIndex(user => user.id === data.id);
             // console.log(index);
-            state.users_list.splice(index,1,data)
+            state.users_list.splice(index,1,data);
+            state.logged_user = data;
         },
+        admin_edit_user(state, data){
+            let index = state.users_list.findIndex(user => user.id === data.id);
+            // console.log(index);
+            state.users_list.splice(index,1,data);
+        },
+
+
         from_to_user(state, data){
-            let index1 = state.users_list.findIndex(user => user.id == data.from_user);
-            let index2 = state.users_list.findIndex(user => user.id == data.to_user);
+            let index1 = state.users_list.findIndex(user => user.id === data.from_user);
+            let index2 = state.users_list.findIndex(user => user.id === data.to_user);
             // console.log(data);
             state.users_list[index1].share_points = Number.parseInt(state.users_list[index1].share_points) - data.amount;
             state.users_list[index2].personal_points = Number.parseInt(state.users_list[index2].personal_points) + data.amount;
@@ -321,11 +337,12 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject)=>
             {
                 let id = store.getters.get_id_from_token;
-                HTTP.put('/users/'+id+'/', edit)
+                HTTP.patch('/users/'+id+'/', edit)
                     .then(response => {
                         // console.log("KIKIKI");
                         console.log(response.data);
-                        // context.commit("from_to_user", edit);
+                        let user = response.data;
+                        context.commit("edit_user", user);
                         resolve(response)
 
                     })
@@ -343,6 +360,34 @@ export const store = new Vuex.Store({
             })
 
         },
+        admin_edit_user: async (context, edit) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.patch('/users/'+edit.id+'/', edit)
+                    .then(response => {
+                        // console.log("KIKIKI");
+                        console.log(response.data);
+                        let user = response.data;
+                        context.commit("admin_edit_user", user);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        // if (error.response.status === 401) {
+                        //     localStorage.setItem("auth_token_access", 0);
+                        //
+                        //     window.location.reload(true)
+                        // }
+
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+
+        },
+
 
 
 
@@ -383,6 +428,45 @@ export const store = new Vuex.Store({
 
         },
 
+        send_feedback: async (context, message) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/feedbackmessages/', message)
+                    .then(response => {
+                       console.log(response.data);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
+                        reject(error)
+                    })
+            })
+
+        },
+
+        get_feedback: async (context) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.get('/feedbackmessages/')
+                    .then(response => {
+                        console.log(response.data);
+                        let feedback = response.data;
+                        context.commit("set_feedback_messages", feedback );
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
+                        reject(error)
+                    })
+            })
+
+        },
 
 
 

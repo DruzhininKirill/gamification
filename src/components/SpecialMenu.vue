@@ -53,7 +53,8 @@
                     id: 4,
                     icon: 'mail',
                     name: 'Почта',
-                    color: 'green'
+                    color: 'green',
+                    path: 'inbox'
                 },
                 {
                     id: 5,

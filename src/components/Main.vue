@@ -7,7 +7,7 @@
 
                     <v-card class="mx-3 ma-3 " max-width="600" min-width="300" >
                         <v-toolbar  color="primary" dark>
-                            <v-toolbar-title>User Profile</v-toolbar-title>
+                            <v-toolbar-title>Личные данные</v-toolbar-title>
                         </v-toolbar>
                         <v-tabs centered >
                             <v-tab>
@@ -25,17 +25,20 @@
 
                             <v-tab-item>
                                 <v-card flat >
-                                    <v-layout row wrap>
-                                        <v-flex class="mx-auto">
-                                            <v-avatar size="150" class="grey lighten-5 ma-3">
+                                    <v-layout column wrap >
+                                        <v-flex class="mx-auto d-inline-flex flex-column ">
+                                            <v-avatar size="150" class="grey lighten-5 ma-3 align-self-center">
                                                 <img src="https://randomuser.me/api/portraits/men/78.jpg">
                                             </v-avatar>
+                                            <div class="text-center">
+                                            <div class="title black--text " >{{ user.first_name}} {{ user.last_name}}</div>
+                                            <div class="subtitle-2">{{user.position}}</div>
+                                            <div class="subtitle-2">{{user.email}}</div>
+                                            </div>
                                         </v-flex>
                                         <v-flex >
-                                            <v-card-text>
-                                                <div class="title black--text " >{{ user.first_name}} {{ user.last_name}}</div>
-                                                <div class="subtitle-2">{{user.position}}</div>
-                                                <div class="subtitle-2">{{user.email}}</div>
+                                            <v-card-text class="ma-3">
+
                                                 <div class="subtitle-2"> О себе:
                                                     <v-card-text>
                                                         {{user.profile}}
@@ -47,8 +50,32 @@
                                     </v-layout>
                                     <v-spacer></v-spacer>
                                     <v-divider></v-divider>
-                                    <div class="subtitle-2">{{user.personal_points}}</div>
-                                    <div class="subtitle-2">{{user.share_points}}</div>
+                                    <v-layout justify-space-around  >
+                                        <div class="d-inline-flex flex-column justify-center" style="border: indigo 3px">
+                                            <v-col>
+                                                <v-card-title>Копилка</v-card-title>
+                                            </v-col>
+                                            <v-col class="text-center">
+                                               <h1 style="border-radius: 50%;border: solid">  {{user.personal_points}}</h1>
+                                            </v-col>
+
+
+                                        </div>
+
+                                        <div class="d-inline-flex flex-column">
+                                            <v-col>
+                                               <v-card-title>Спасибо</v-card-title>
+                                            </v-col>
+                                            <v-col class="text-center">
+                                                {{user.share_points}}
+                                            </v-col>
+
+
+                                        </div>
+
+
+                                    </v-layout >
+
                                 </v-card>
                             </v-tab-item>
                             <v-tab-item>

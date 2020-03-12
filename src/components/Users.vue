@@ -2,10 +2,27 @@
                 <v-layout row wrap >
                 <v-flex xs12 sm6 md4 lg3 v-for="user in colleagues()" :key="user.id">
                     <v-card class="text-center ma-3">
+
+
                         <v-responsive class="pt-4">
-                            <v-avatar size="150" class="grey lighten-5">
-                                <img src="https://randomuser.me/api/portraits/men/73.jpg">
+
+                            <v-badge v-if="(user.is_staff) || (user.is_teamlead)"
+                                    avatar
+                                    bordered
+                                    overlap
+                                    :icon="getIcon(user)"
+
+                            >
+
+
+                                <v-avatar size="150" class="grey lighten-5">
+                                    <img src="https://randomuser.me/api/portraits/men/72.jpg">
+                                </v-avatar>
+                            </v-badge>
+                            <v-avatar v-else size="150" class="grey lighten-5">
+                                <img src="https://randomuser.me/api/portraits/men/72.jpg">
                             </v-avatar>
+
                         </v-responsive>
                         <v-card-text>
                             <div class="subheading">{{ user.first_name}} {{ user.last_name}}</div>
@@ -41,6 +58,11 @@
             colleagues(){
                 return this.users_list.filter(user2 => user2 !== this.user);
 
+            },
+            getIcon(user){
+                if (user.is_staff) return 'build';
+                if (user.is_teamlead) return 'grade';
+                return ''
             }
         }
     }

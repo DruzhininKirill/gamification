@@ -20,6 +20,7 @@ import Special from "./components/Special";
 import UserManagement from "./components/UserManagement";
 import SpecialMenu from "./components/SpecialMenu";
 import MarketManagement from "./components/MarketManagement";
+import Inbox from "./components/Inbox";
 
 Vue.config.productionTip = false;
 
@@ -73,6 +74,7 @@ const routes = [
   {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
   {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},
   {path: '/feedback', component: Feedback, beforeEnter: ifAuthenticated, meta: {title: "Обратная связь"}},
+
   {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"},
     children: [
       {
@@ -89,6 +91,11 @@ const routes = [
         path: 'marketmanagement',
         component: MarketManagement,
         meta: {title:"Управление маркетплейсом"}
+      },
+      {
+        path: 'inbox',
+        component: Inbox,
+        meta: {title:"Почта"}
       },
     ]},
 

@@ -172,7 +172,9 @@
                     "password" : this.password2
                 };
 
-                this.$store.dispatch('edit_user', edited)
+                this.$store.dispatch('edit_user', edited).then(
+
+                )
             }
         }
     }

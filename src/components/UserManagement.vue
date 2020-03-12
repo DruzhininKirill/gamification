@@ -14,20 +14,27 @@
                         vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
+<!--                <v-btn v-show="changes" color="green" rounded dark v-on="save">Сохранить</v-btn>-->
                 <NewUser></NewUser>
 
             </v-toolbar>
         </template>
         <template v-slot:item.action="{ item }">
             <v-icon
-                    small
+                    :color="getColor(item.is_staff)"
                     class="mr-2"
-                    @click="editItem(item)"
+                    @click="change_is_staff(item)"
             >
-                edit
+                build
             </v-icon>
             <v-icon
-                    small
+                    :color="getColor(item.is_teamlead)"
+                    class="mr-2"
+                    @click="change_is_teamlead(item)"
+            >
+                grade
+            </v-icon>
+            <v-icon
                     @click="deleteItem(item)"
             >
                 delete
@@ -46,34 +53,17 @@
         components: {NewUser},
         data: () => ({
             dialog: false,
+            // changes: false,
             headers: [
                 { text: 'Имя', value: 'first_name' },
                 { text: 'Фамилия', value: 'last_name' },
                 { text: 'Баллы спасибо', value: 'share_points' },
                 { text: 'Копилка', value: 'personal_points' },
-                { text: 'Actions', value: 'action', sortable: false },
+                { text: 'Действия', value: 'action', sortable: false },
             ],
-            editedIndex: -1,
-            editedItem: {
-                name: '',
-                calories: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0,
-            },
-            defaultItem: {
-                name: '',
-                calories: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0,
-            },
         }),
 
         computed: {
-            formTitle () {
-                return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-            },
 
             users_list() {
                 return this.$store.getters.users_list
@@ -88,41 +78,35 @@
 
         },
 
-        watch: {
-            dialog (val) {
-                val || this.close()
-            },
-        },
-
 
         methods: {
 
-            editItem (item) {
-                this.editedIndex = this.desserts.indexOf(item)
-                this.editedItem = Object.assign({}, item)
-                this.dialog = true
+            change_is_staff(item){
+                item.is_staff = !item.is_staff;
+                // this.changes = true;
+
+                this.$store.dispatch("admin_edit_user",item)
+            },
+            change_is_teamlead(item){
+                item.is_teamlead = !item.is_teamlead;
+                this.$store.dispatch("admin_edit_user",item)
+                // this.changes = true;
+            },
+
+
+            getColor(item){
+                if(item) return "primary";
+                else return 'secondary'
             },
 
             deleteItem (item) {
-                const index = this.desserts.indexOf(item)
-                confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+                const index = this.users_list.indexOf(item);
+                confirm('Are you sure you want to delete this item?') && this.users_list.splice(index, 1)
             },
 
-            close () {
-                this.dialog = false
-                setTimeout(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
-                    this.editedIndex = -1
-                }, 300)
-            },
 
             save () {
-                if (this.editedIndex > -1) {
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem)
-                } else {
-                    this.desserts.push(this.editedItem)
-                }
-                this.close()
+
             },
         },
     }

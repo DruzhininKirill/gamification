@@ -1,58 +1,58 @@
 <template>
+    <v-layout column class="align-center">
+        <div class="text-center ma-3"  >
+            <h1>Обратная связь</h1>
+            <div class="subtitle-1" style="max-width: 800px">
+                Если у тебя возникли вопросы, пожелания или предложения по работе нашей системы,
+                заполни форму ниже, и мы обязательно ответим тебе в бижайшее время
+            </div>
+        </div>
+
+
+        <v-card
+             flat
+             width="600px"
+             outlined
+             class="ma-3"
+
+        >
 
         <v-form
                 ref="form"
-                v-model="valid"
-                :lazy-validation="lazy"
         >
+            <v-card-text>
+
             <v-text-field
-                    v-model="name"
-                    :counter="10"
-                    :rules="nameRules"
-                    label="Name"
+                    outlined
+                    v-model="title"
+                    label="Тема"
                     required
             ></v-text-field>
 
-            <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    label="E-mail"
+
+            <v-textarea
+                    outlined
+                    v-model="text"
+                    :rules="[v => !!v || 'Поле не может быть пустым']"
+                    label="Текст"
+                    hint="Любые пожелания или замечания по работе сервиса"
                     required
-            ></v-text-field>
+            ></v-textarea>
 
-            <v-select
-                    v-model="select"
-                    :items="items"
-                    :rules="[v => !!v || 'Item is required']"
-                    label="Item"
-                    required
-            ></v-select>
 
+            </v-card-text>
+            <v-card-actions class="justify-center" >
 
             <v-btn
-                    :disabled="!valid"
-                    color="success"
-                    class="mr-4"
-                    @click="validate"
+                    color="primary"
+                    @click="send_feedback"
             >
-                Validate
+                Отправить
             </v-btn>
-
-            <v-btn
-                    color="error"
-                    class="mr-4"
-                    @click="reset"
-            >
-                Reset Form
-            </v-btn>
-
-            <v-btn
-                    color="warning"
-                    @click="resetValidation"
-            >
-                Reset Validation
-            </v-btn>
+            </v-card-actions>
         </v-form>
+        </v-card>
+    </v-layout>
 
 
 
@@ -63,7 +63,19 @@
         name: "Feedback",
         data:()=>({
             valid:false,
-    })
+            text:"",
+            title:"",
+    }),
+        methods:{
+            send_feedback(){
+                let message = {
+                    "topic": this.title,
+                    "text": this.text,
+
+                };
+                this.$store.dispatch("send_feedback", message);
+            }
+        }
     }
 </script>
 
