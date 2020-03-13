@@ -1,6 +1,6 @@
 <template>
     <v-card
-
+            width="100%"
             class="mx-auto"
     >
         <v-toolbar
@@ -18,37 +18,29 @@
             </v-btn>
         </v-toolbar>
 
-        <v-list three-line>
-            <template v-for="(message, index) in feedback_messages">
-                <v-subheader
-                        v-if="message.header"
-                        :key="message.header"
-                        v-text="message.header"
-                ></v-subheader>
 
-                <v-divider
-                        :key="index"
-
-                ></v-divider>
-
-                <v-list-item
+            <v-expansion-panels focusable>
+                <v-expansion-panel
+                        v-for="(message) in feedback_messages"
                         :key="message.id"
-
                 >
-                    <v-list-item-avatar>
-                        <v-img :src="message.avatar"></v-img>
-                    </v-list-item-avatar>
+                    <v-expansion-panel-header>
+                            <v-img class="v-avatar mr-3" max-width="50px" src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+                        <v-card-text>
+                            <div class="subheading">
+                                {{message.topic}}
+                               <span class="float-right grey--text"> {{dateformat(message.created_at)}}</span>
+                            </div>
+                            <div class="grey--text">{{message.author.first_name}} {{message.author.last_name}}</div>
 
-                    <v-list-item-content>
-                        <v-list-item-title v-html="message.topic"></v-list-item-title>
-                        <v-list-item-subtitle >
-                            <span class='text--primary'><strong>{{message.author.first_name}} {{message.author.last_name}}</strong>&mdash;
-                            {{message.text}}</span>
-                        </v-list-item-subtitle>
-                    </v-list-item-content>
-                </v-list-item>
-            </template>
-        </v-list>
+                        </v-card-text>
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                          <span class='text&#45;&#45;primary'> {{message.text}}</span>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-expansion-panels>
+
     </v-card>
 </template>
 
@@ -109,6 +101,13 @@
             }
 
         },
+        methods:{
+            dateformat(date){
+                let date2 = new Date(date);
+                let str = date2.toDateString() + " "+ date2.getHours()+":"+date2.getMinutes()
+                return str
+            }
+        }
     }
 </script>
 

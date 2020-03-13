@@ -155,8 +155,8 @@ export const store = new Vuex.Store({
         },
 
         //delete
-        deleteuser(state, id){
-            const  index = state.users_list.findIndex(user => user.id == id);
+        deleteuser(state, duser){
+            const  index = state.users_list.findIndex(user => user===duser);
             state.users_list.splice(index,1)
         },
         destroyToken(state){
@@ -360,7 +360,15 @@ export const store = new Vuex.Store({
             })
 
         },
-        admin_edit_user: async (context, edit) =>{
+        admin_edit_user: async (context, user) =>{
+
+            let edit = {
+                'id' : user.id,
+                'email':user.email,
+                'is_staff': user.is_staff,
+                'is_teamlead': user.is_teamlead,
+            };
+
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
             {
@@ -368,7 +376,7 @@ export const store = new Vuex.Store({
                     .then(response => {
                         // console.log("KIKIKI");
                         console.log(response.data);
-                        let user = response.data;
+                        // let user = response.data;
                         context.commit("admin_edit_user", user);
                         resolve(response)
 
@@ -391,13 +399,23 @@ export const store = new Vuex.Store({
 
 
 
-        deleteuser: async (context, id)=>{
-            let url = '/users/'+id+'/';
-            let {status} = await HTTP.delete(url);
-            if (status == 204){
-                context.commit('deleteuser', id);
-            }else
-                console.log("Произашла ошибка: " + JSON.stringify(status));
+        delete_user: async (context, user)=>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.delete('/users/'+user.id+'/')
+                    .then(response => {
+                        console.log(response.data);
+                        context.commit("delete_user", user);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+
         },
 
         add_new_user: async (context, user)=>{
@@ -414,13 +432,6 @@ export const store = new Vuex.Store({
 
                     })
                     .catch(error =>{
-                        console.log(error);
-                        // if (error.response.status === 401) {
-                        //     localStorage.setItem("auth_token_access", 0);
-                        //
-                        //     window.location.reload(true)
-                        // }
-
                         console.log(error);
                         reject(error)
                     })

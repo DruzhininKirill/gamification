@@ -85,6 +85,7 @@
                 item.is_staff = !item.is_staff;
                 // this.changes = true;
 
+
                 this.$store.dispatch("admin_edit_user",item)
             },
             change_is_teamlead(item){
@@ -99,9 +100,11 @@
                 else return 'secondary'
             },
 
-            deleteItem (item) {
-                const index = this.users_list.indexOf(item);
-                confirm('Are you sure you want to delete this item?') && this.users_list.splice(index, 1)
+            deleteItem (user) {
+                // const index = this.users_list.indexOf(user);
+                this.$store.dispatch("delete_user",user);
+                confirm('Are you sure you want to delete this item?') && this.$store.dispatch("delete_user",user);
+                // this.users_list.splice(index, 1)
             },
 
 

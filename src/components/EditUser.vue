@@ -137,7 +137,7 @@
         last_name: null,
         email: '',
         password1: null,
-        password2: null,
+        password2: '',
 
         Rules: [
             v => !!v || 'Field is required',
@@ -169,8 +169,11 @@
                     "position" : this.position,
                     "email" : this.email,
                     "profile" : this.profile,
-                    "password" : this.password2
+                    // "password" : this.password2
                 };
+                if (this.password2 != ""){
+                    edited.password = this.password2
+                }
 
                 this.$store.dispatch('edit_user', edited).then(
 
