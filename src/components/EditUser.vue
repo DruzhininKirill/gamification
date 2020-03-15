@@ -68,8 +68,8 @@
 
                             >
                                 <v-text-field
-                                        id="password"
-                                        v-model="password"
+                                        id="password1"
+                                        v-model="password1"
                                         :append-icon="showpas ? 'md-eye' : 'mdi-eye-off'"
                                         :type="showpas ? 'text' : 'password'"
                                         hint="от 8 символов"
@@ -81,14 +81,14 @@
                                 ></v-text-field>
 
                                 <v-text-field
-                                        id="password"
+                                        id="password2"
                                         v-model="password2"
-                                        :append-icon="showpas ? 'md-eye' : 'mdi-eye-off'"
+                                        :append-icon="showpas ? 'eye' : 'eye-off'"
                                         :type="showpas ? 'text' : 'password'"
                                         hint="от 8 символов"
                                         counter
                                         color="indigo"
-                                        :rules="[PasswordRules.required, PasswordRules.min, PasswordRules.match]"
+                                        :rules="[PasswordRules.match]"
                                         label="Повторите пароль"
                                         required
                                 ></v-text-field>
@@ -131,12 +131,12 @@
 
         valid: false,
         showpas: false,
-        profile: 'ki',
-        first_name: null,
+        profile: '',
+        first_name: '',
         position: "",
-        last_name: null,
+        last_name: '',
         email: '',
-        password1: null,
+        password1: '',
         password2: '',
 
         Rules: [
@@ -145,7 +145,7 @@
         PasswordRules: {
             required: value => !!value || 'введите пароль',
             min: v => v.length >= 8 || 'пароль менее 8 символов',
-            match: v => v == this.password1 || "не совпадают",
+            match: v => v === this.password1 || "не совпадают",
         },
 
         emailRules: [

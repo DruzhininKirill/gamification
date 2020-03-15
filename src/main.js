@@ -21,6 +21,7 @@ import UserManagement from "./components/UserManagement";
 import SpecialMenu from "./components/SpecialMenu";
 import MarketManagement from "./components/MarketManagement";
 import Inbox from "./components/Inbox";
+import CategoryManagement from "./components/CategoryManagement";
 
 Vue.config.productionTip = false;
 
@@ -96,6 +97,11 @@ const routes = [
         path: 'inbox',
         component: Inbox,
         meta: {title:"Почта"}
+      },
+      {
+        path: 'promotions',
+        component: CategoryManagement,
+        meta: {title:"Поощерения"}
       },
     ]},
 

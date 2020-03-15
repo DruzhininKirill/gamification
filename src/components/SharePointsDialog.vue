@@ -104,10 +104,9 @@
             sendpoints(){
                 this.$store.dispatch('addpoints',{
                     to_user: this.item.id,
-                    from_user: this.user.id,
                     amount: this.value,
                     comment:this.comment,
-                    category: 1
+                    // category: 1
                 });
 
                 // alert("lol");

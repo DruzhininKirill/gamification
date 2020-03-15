@@ -332,6 +332,28 @@ export const store = new Vuex.Store({
         },
 
 
+        add_super_transaction: async (context, data) =>{
+            alert("kiki");
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/supertransactions/', data)
+                    .then(response => {
+                        // console.log("KIKIKI");
+                        console.log(response.data);
+                        // context.commit("from_to_user", data);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+
+        },
+
+
         edit_user: async (context, edit) =>{
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>

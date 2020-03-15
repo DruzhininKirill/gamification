@@ -60,7 +60,8 @@
                     id: 5,
                     icon: 'book',
                     name: 'Категории',
-                    color: 'blue'
+                    color: 'blue',
+                    path: 'promotions'
                 },
 
             ]
