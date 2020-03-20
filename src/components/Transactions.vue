@@ -33,6 +33,9 @@
             <template v-slot:item.category="{ item }">
                     {{get_cat_by_id(item.category)}}
             </template>
+            <template v-slot:item.created_at="{ item }">
+                {{dateformat(item.created_at)}}
+            </template>
         </v-data-table>
     </v-card>
 </template>
@@ -85,6 +88,11 @@
             get_cat_by_id(id){
                 let cat = this.categories.find(cat=> cat.id === id);
                 return cat.name
+            },
+            dateformat(date){
+                let date2 = new Date(date);
+                let str = date2.toDateString() + " "+ date2.getHours()+":"+date2.getMinutes()
+                return str
             }
         }
 

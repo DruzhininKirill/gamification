@@ -5,7 +5,7 @@
             <v-spacer></v-spacer>
             <v-text-field
                     v-model="search"
-                    append-icon="mdi-magnify"
+                    append-icon="magnify"
                     label="Search"
                     single-line
                     hide-details
@@ -20,6 +20,12 @@
 
                 hide-default-footer
         >
+            <template v-slot:item.place="{ item }">
+
+                    {{users_list.map(function(x) {return x.id; }).indexOf(item.id)+1}}
+
+            </template>
+
 
             <template v-slot:item.add_button="{ item }">
 
@@ -51,6 +57,7 @@
                     //     sortable: false,
                     //     value: 'name',
                     // },
+                    { text: '#', value: 'place', sortable: false, },
                     { text: 'Имя', value: 'first_name', sortable: false , },
                     { text: 'Фамилия', value: 'last_name', sortable: false ,  },
                     { text: 'Баллы спасибо', value: 'share_points' },
@@ -85,7 +92,7 @@
             addpoints(data){
                 // alert("ki");
                 this.$store.dispatch('addpoints',data);
-            }
+            },
         }
     }
 </script>

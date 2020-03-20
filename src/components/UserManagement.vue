@@ -14,7 +14,7 @@
                         vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
-<!--                <v-btn v-show="changes" color="green" rounded dark v-on="save">Сохранить</v-btn>-->
+                <ExcelData></ExcelData>
                 <NewUser></NewUser>
 
             </v-toolbar>
@@ -48,9 +48,10 @@
 
 <script>
     import NewUser from "./NewUser";
+    import ExcelData from "./ExcelData";
     export default {
         name: "UserManagement",
-        components: {NewUser},
+        components: {ExcelData, NewUser},
         data: () => ({
             dialog: false,
             // changes: false,

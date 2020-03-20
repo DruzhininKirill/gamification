@@ -5,7 +5,7 @@
             <v-layout row wrap align-content-center >
                 <v-flex xs12 sm12 md6 >
 
-                    <v-card class="mx-3 ma-3 " max-width="600" min-width="300" >
+                    <v-card class="ma-3 "   >
                         <v-toolbar  color="primary" dark>
                             <v-toolbar-title>Личные данные</v-toolbar-title>
                         </v-toolbar>
@@ -37,7 +37,7 @@
                                             </div>
                                         </v-flex>
                                         <v-flex >
-                                            <v-card-text class="ma-3">
+                                            <v-card-text >
 
                                                 <div class="subtitle-2"> О себе:
                                                     <v-card-text>
@@ -48,53 +48,56 @@
                                             </v-card-text>
                                         </v-flex>
                                     </v-layout>
-                                    <v-spacer></v-spacer>
                                     <v-divider></v-divider>
-                                    <v-layout justify-space-around  >
-                                        <div class="d-inline-flex flex-column justify-center" style="border: indigo 3px">
-                                            <v-col>
-                                                <v-card-title>Копилка</v-card-title>
-                                            </v-col>
-                                            <v-col class="text-center">
-                                               <h1 style="border-radius: 50%;border: solid">  {{user.personal_points}}</h1>
-                                            </v-col>
-
-
-                                        </div>
-
-                                        <div class="d-inline-flex flex-column">
-                                            <v-col>
-                                               <v-card-title>Спасибо</v-card-title>
-                                            </v-col>
-                                            <v-col class="text-center">
-                                                {{user.share_points}}
-                                            </v-col>
-
-
-                                        </div>
-
-
-                                    </v-layout >
 
                                 </v-card>
                             </v-tab-item>
                             <v-tab-item>
                                 <v-card flat>
                                     <v-card-text>
-                                        <p>
-                                            Fusce a quam. Phasellus nec sem in justo pellentesque facilisis. Nam eget dui. Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi mauris ac eros. In dui magna, posuere eget, vestibulum et, tempor auctor, justo.
-                                        </p>
+                                        <v-row align="center" justify="space-around">
+                                            <v-card flat class="ma-3" >
 
-                                        <p class="mb-0">
-                                            Cras sagittis. Phasellus nec sem in justo pellentesque facilisis. Proin sapien ipsum, porta a, auctor quis, euismod ut, mi. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nam at tortor in tellus interdum sagittis.
-                                        </p>
+                                                <v-card-title>Копилка</v-card-title>
+                                                <div style="border-radius: 100%" class="circle-text">
+                                                    <span class="stat_data">{{user.personal_points}}</span>
+                                                </div >
+
+                                            </v-card>
+
+                                            <v-card flat class="ma-3">
+                                                <v-card-title>Спасибо</v-card-title>
+                                                <div style="border-radius: 100%" class="circle-text">
+                                                    <span class="stat_data">{{user.share_points}}</span>
+                                                </div>
+                                            </v-card>
+                                        </v-row>
+
+                                        <v-row align="center" justify="space-around">
+                                            <v-card flat class="ma-3" >
+
+                                                <v-card-title>Рейтинг</v-card-title>
+                                                <div style="border-radius: 100%" class="circle-text">
+                                                    <span class="stat_data">{{users_list.findIndex(ex=> user ===ex)+1}}</span>
+                                                </div >
+
+                                            </v-card>
+
+<!--                                            <v-card flat class="ma-3">-->
+<!--                                                <v-card-title>Спасибо</v-card-title>-->
+<!--                                                <div style="border-radius: 100%" class="circle-text">-->
+<!--                                                    <span class="stat_data">{{user.share_points}}</span>-->
+<!--                                                </div>-->
+<!--                                            </v-card>-->
+                                        </v-row>
+
                                     </v-card-text>
                                 </v-card>
                             </v-tab-item>
                             <v-tab-item>
                                 <v-card flat>
                                     <v-card-text>
-                                        <EditUser :user="user"></EditUser>
+                                        <EditUser @reload="reload" :user="user"></EditUser>
 
                                     </v-card-text>
                                 </v-card>
@@ -103,11 +106,11 @@
                     </v-card>
 
 <!--                    {{user}}-->
-                </v-flex>
+                </v-flex >
                 <v-flex xs12 md6>
                     <v-card
-                            max-width="500"
-                            class="mx-auto ma-3"
+
+                            class="ma-3"
                     >
                         <v-toolbar
                                 color="primary"
@@ -136,6 +139,7 @@
                                     :key="item.id"
 
 
+
                             >
                                 <v-list-item-icon>
                                     <v-icon> star</v-icon>
@@ -149,9 +153,12 @@
                                     <v-list-item-title v-text="get_cat_by_id(item.category) "> </v-list-item-title>
                                 </v-list-item-content
                                 >
-                                <v-list-item-content>
-                                    <v-list-item-title v-text="item.amount"> </v-list-item-title>
-                                </v-list-item-content>
+
+                                <v-list-item-icon>
+                                    <v-list-item-title  v-text="item.amount"> </v-list-item-title>
+                                </v-list-item-icon>
+
+
 
 <!--                                <v-list-item-avatar>-->
 <!--                                    <v-img :src="item.avatar"></v-img>-->
@@ -161,9 +168,8 @@
                     </v-card>
 
                     <v-card
-                            max-width="500"
                             max-height="360"
-                            class="mx-auto ma-3"
+                            class="ma-3"
                     >
                         <v-toolbar
                                 color="primary"
@@ -194,9 +200,10 @@
                                     <v-list-item-title v-text="get_cat_by_id(item.category)"> </v-list-item-title>
                                 </v-list-item-content>
 
-                                <v-list-item-content>
+                                <v-list-item-icon>
                                     <v-list-item-title v-text="item.amount"> </v-list-item-title>
-                                </v-list-item-content>
+                                    <v-list-item-title v-text="item.amount"> </v-list-item-title>
+                                </v-list-item-icon>
 
 <!--                                <v-list-item-avatar>-->
 <!--                                    <v-img :src="item.avatar"></v-img>-->
@@ -263,7 +270,12 @@
             get_cat_by_id(id){
                 let cat = this.categories.find(cat=> cat.id === id);
                 return cat.name
-            }
+            },
+            reload(){
+                alert("ji");
+                this.user = this.$store.getters.logged_user()
+            },
+
         }
     }
 
@@ -273,71 +285,25 @@
 
 </script>
 
-<!--<script>-->
-<!--    export default {-->
-<!--        name: "UserEdit",-->
-<!--        props:{-->
-<!--            id: Number,-->
-<!--            first_name: String,-->
-<!--            last_name: String,-->
-<!--            status: String,-->
-<!--            profile: String,-->
-<!--            points: String-->
-<!--        },-->
-<!--        data(){-->
-<!--            return{-->
-<!--                del: true,-->
-<!--                putuser_id: this.id,-->
-<!--                putfirst_name: this.first_name,-->
-<!--                putlast_name: this.last_name,-->
-<!--                putprofile: this.profile,-->
-<!--                putpoints: this.points,-->
-<!--                putstatus: this.status,-->
-<!--                Rules: [-->
-<!--                    v => !!v || 'Field is required',-->
-<!--                ],-->
-<!--                PointRules: {-->
-<!--                    required: value => !!value || 'Field is required',-->
-<!--                    num: v => v>=-100 || 'Field must contain only numbers from -100',-->
-<!--                    num2: v => v<1000000 || "Hey, it's a fraud!",-->
-<!--                }-->
-
-<!--            }-->
-<!--        },-->
-<!--        methods: {-->
-<!--            putusr(){-->
-<!--                switch (this.putstatus) {-->
-<!--                    case "admin":-->
-<!--                        this.putstatus = 1;-->
-<!--                        break;-->
-<!--                    case "teacher":-->
-<!--                        this.putstatus = 2;-->
-<!--                        break;-->
-<!--                    case "leader":-->
-<!--                        this.putstatus = 3;-->
-<!--                        break;-->
-<!--                    case "student":-->
-<!--                        this.putstatus = 4;-->
-<!--                        break;}-->
-
-<!--                let is_staff = (this.putstatus != "4");-->
-<!--                let user = {-->
-<!--                    "id": this.id,-->
-<!--                    "first_name": this.putfirst_name,-->
-<!--                    "last_name": this.putlast_name,-->
-<!--                    "status":this.putstatus,-->
-<!--                    "profile": this.putprofile,-->
-<!--                    "points": this.putpoints,-->
-<!--                    "is_staff": is_staff-->
-<!--                };-->
-
-<!--                this.$emit('changeusr', user);-->
-<!--            },-->
-<!--            -->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
 
 <style scoped>
+    .circle-text{
+        /*background: #3F51B5;*/
+        text-align: center;
+        border-radius: 100%;
+        border: solid;
+        height: 80px;
+        width: 80px;
+        margin: 0 auto;
+
+    }
+    .stat_data{
+        font-size: 30px;
+        display: inline-block;
+        height: 80px;
+        margin-top: 25px;
+
+
+    }
 
 </style>

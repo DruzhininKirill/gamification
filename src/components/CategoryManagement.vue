@@ -13,15 +13,11 @@
             <v-stepper-step step="3">Подтвержение</v-stepper-step>
         </v-stepper-header>
 
-        <v-stepper-items>
+        <v-stepper-items >
             <v-stepper-content step="1">
                 <v-card
                         class="mb-6 "
                         flat
-
-
-
-
 
                 >
                     <v-card-text>
@@ -34,7 +30,6 @@
                                 {{user.first_name}} {{user.last_name}}
 
                             </v-list-item-content>
-                            <v-spacer></v-spacer>
 
                             <v-checkbox  :value="user.id" v-model="selected_users"></v-checkbox>
 
@@ -42,7 +37,8 @@
                         </v-list-item>
                     </v-card-text>
                 </v-card>
-
+                <div class="float-right">
+                    <v-btn @click="reset" text>Отмена</v-btn>
                 <v-btn
                         color="primary"
                         @click="e1 = 2"
@@ -50,7 +46,8 @@
                     Далее
                 </v-btn>
 
-                <v-btn text>Cancel</v-btn>
+
+                </div>
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -60,8 +57,10 @@
 
 
 
+
                 >
-                    <v-card-text>
+
+                    <v-card-text >
                         <v-radio-group v-model="selected_cat">
                             <template>
                                 <v-list-item v-for="category in categories" v-bind:key="category.id">
@@ -69,24 +68,31 @@
                                         {{category.name}}
 
                                     </v-list-item-content>
-                                    <v-spacer></v-spacer>
+
                                     <v-radio  :value="category" ></v-radio>
                                 </v-list-item>
                             </template>
                         </v-radio-group>
                         <v-slider
+                                v-if="labels.length!==1"
                                 v-model="point_i"
-                                :tick-labels= point_set
-                                :max="2"
+                                :tick-labels= labels
+                                :max= labels.length-1
                                 step="1"
                                 ticks="always"
                                 tick-size="4"
                         ></v-slider>
+                        <div v-else class="ma-4 text-center" >
+                            <h1>{{labels[point_i]}}</h1>
+                        </div>
 
 
                     </v-card-text>
                 </v-card>
 
+                <div class="float-right">
+                    <NewCategory></NewCategory>
+                <v-btn @click="reset" text>Отмена</v-btn>
                 <v-btn
                         color="primary"
                         @click="e1 = 3"
@@ -94,48 +100,94 @@
                     Далее
                 </v-btn>
 
-                <v-btn text>Cancel</v-btn>
+                </div>
             </v-stepper-content>
 
             <v-stepper-content step="3">
                 <v-card
                         class="mb-6"
-                        height="200px"
+
                         flat
 
                 >
                     <v-card-title>
                         Новое поощерение
                     </v-card-title>
-                    Пользователи: {{selected_users}}
-                    Категория: {{selected_cat.name}}
-                    Количество:{{point_set[point_i]}}
+                    <v-card-text>
+                        <v-row wrap>
+
+                        <v-col>
+                            <p class="subtitle-1 text--black"> Пользователи:</p>
+
+                            <div v-for="user in filtered()" v-bind:key="user.id">
+                                {{user_to_str(user)}}
+                            </div>
+                            <div v-if="selected_users.length===0">
+                                Вернитесь к выбору пользователей
+                            </div>
+                        </v-col>
+
+                        <v-col>
+                            <p class="subtitle-1"> Категория:</p>
+                            {{selected_cat.name || "Вернитесь к выбору категории"}}
+                        </v-col>
+
+                        <v-col>
+                            <p class="subtitle-1"> Количество:</p>
+                            {{selected_cat.values[point_i]}}
+                        </v-col>
+                        </v-row>
+                        <v-row>
+
+                        </v-row>
+
+
+
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-text-field
+                                required
+                                v-model="comment"
+                                type="text"
+                                color="indigo"
+                                label="Комментарий"
+                        ></v-text-field>
+                    </v-card-actions>
+
                 </v-card>
 
 
-
+                <div class="float-right">
+                <v-btn @click="reset" text>Отмена</v-btn>
                 <v-btn
+
                         color="primary"
                         @click="super_add_points"
+                        :disabled="disabled()"
                 >
                     Сохранить
                 </v-btn>
 
-                <v-btn text>Cancel</v-btn>
+                </div>
             </v-stepper-content>
         </v-stepper-items>
     </v-stepper>
 </template>
 <script>
+    import NewCategory from "./NewCategory";
     export default {
         name: "CategoryManagement",
+        components: {NewCategory},
         data () {
             return {
                 e1: 1,
-                point_set: [10,15,20],
+                point_set: [10,20,30],
                 selected_users:[],
                 selected_cat:[],
                 point_i:0,
+                comment: 'Особое поощрение',
+                labels:[],
+
             }
         },
         beforeCreate() {
@@ -147,7 +199,7 @@
                 return this.$store.getters.users_list
             },
             categories() {
-                return this.$store.getters.categories
+                return this.$store.getters.categories.filter(cat => cat.name !== 'Спасибо')
             },
         },
         methods:{
@@ -155,11 +207,37 @@
                 let super_transaction = {
                     'to_user': this.selected_users,
                     "category": this.selected_cat.id,
-                    'amount': this.point_set[this.point_i],
-                    'comment': "teamlead action"
+                    'amount': this.selected_cat.values[this.point_i],
+                    'comment': this.comment
                 };
 
                 this.$store.dispatch('add_super_transaction', super_transaction)
+            },
+            filtered(){
+                return this.users_list.filter(user => this.selected_users.includes(user.id ))
+            },
+            disabled() {
+                return this.selected_users.length === 0 || this.selected_cat === ''
+            },
+            user_to_str(user){
+                return user.first_name+" "+ user.last_name
+            },
+            reset(){
+                this.e1=1;
+                this.selected_users=[];
+                this.selected_cat=[];
+                this.point_i=0;
+                this.comment = "Особое поощрение"
+            },
+
+        },
+        watch:{
+            selected_cat: function () {
+                this.labels = this.selected_cat.values.sort(function(a, b){  return a-b});
+                if (this.labels.length === 1){
+                    this.point_i = 0;
+                }
+
             }
         }
     }

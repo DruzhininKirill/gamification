@@ -17,15 +17,26 @@
             </v-card-title>
 
             <v-card-text >
-                <div style="display: flex; justify-content: space-between; flex-flow: row wrap; margin-bottom: 40px">
+                <v-row align="baseline" justify="center">
                     <UserCard :user="user"></UserCard>
-                    <div style="align-self: center; display: flex; flex-direction:column; justify-content: center;">
-                      <h1 style="text-align: center">{{value}}</h1>
+<!--                    <div style="align-self: center; display: flex; flex-direction:column; justify-content: center;">-->
+                        <div>
+                        <h1 style="text-align: center">{{value}}</h1>
                         <v-icon color="black" size="50px">arrow_forward</v-icon>
-                    </div>
+                        </div>
+                        <UserCard :user="item"></UserCard>
 
-                    <UserCard :user="item"></UserCard>
-                </div>
+
+                </v-row>
+<!--                <div style="display: flex; justify-content: space-between; flex-flow: row wrap; margin-bottom: 40px">-->
+<!--                    <UserCard :user="user"></UserCard>-->
+<!--                    <div style="align-self: center; display: flex; flex-direction:column; justify-content: center;">-->
+<!--                      <h1 style="text-align: center">{{value}}</h1>-->
+<!--                        <v-icon color="black" size="50px">arrow_forward</v-icon>-->
+<!--                    </div>-->
+<!---->
+<!--                    <UserCard :user="item"></UserCard>-->
+<!--                </div>-->
 
                 <v-spacer></v-spacer>
 

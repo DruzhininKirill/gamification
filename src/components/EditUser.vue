@@ -176,7 +176,7 @@
                 }
 
                 this.$store.dispatch('edit_user', edited).then(
-
+                    this.$emit('reload')
                 )
             }
         }

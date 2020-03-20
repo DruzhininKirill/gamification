@@ -103,6 +103,9 @@ export const store = new Vuex.Store({
         add_user(state, user){
             state.users_list.push(user)
         },
+        add_cat(state, cat){
+            state.categories.push(cat)
+        },
         //setters
         retrieveToken_r(state, token){
             state.token_r = token;
@@ -118,6 +121,10 @@ export const store = new Vuex.Store({
             state.transactions = transactions;
         },
         set_categories(state, cats){
+            // alert(JSON.stringify(cats));
+            cats.forEach(cat => cat.values= cat.values.split(','));
+            // alert(JSON.stringify(cats));
+
             state.categories = cats;
         },
         set_feedback_messages(state, feedback){
@@ -461,6 +468,28 @@ export const store = new Vuex.Store({
 
         },
 
+        add_new_cat: async (context, cat)=>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/categories/', cat)
+                    .then(response => {
+                        let newcat = response.data;
+                        newcat.values= newcat.values.split(',');
+                        context.commit("add_cat", newcat);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+
+        },
+
+
+
         send_feedback: async (context, message) =>{
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
@@ -500,6 +529,28 @@ export const store = new Vuex.Store({
             })
 
         },
+
+
+
+        get_excel:async (context, data)=>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/excel/', data )
+                    .then(response => {
+                        console.log(response.data);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+        },
+
+
+
 
 
 
