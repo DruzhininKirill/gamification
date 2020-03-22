@@ -16,9 +16,9 @@
         <v-stepper-items >
             <v-stepper-content step="1">
                 <v-card
-                        class="mb-6 "
+                        class="mb-4 overflow-y-auto"
                         flat
-
+                        max-height="450"
                 >
                     <v-card-text>
 
@@ -52,8 +52,10 @@
 
             <v-stepper-content step="2">
                 <v-card
-                        class="mb-6 "
+                        class="mb-5 overflow-y-auto"
                         flat
+                        max-height="360"
+
 
 
 
@@ -62,8 +64,11 @@
 
                     <v-card-text >
                         <v-radio-group v-model="selected_cat">
-                            <template>
-                                <v-list-item v-for="category in categories" v-bind:key="category.id">
+                            <template >
+                                <v-list-item
+                                        v-for="category in categories" v-bind:key="category.id"
+
+                                >
                                     <v-list-item-content>
                                         {{category.name}}
 
@@ -73,23 +78,25 @@
                                 </v-list-item>
                             </template>
                         </v-radio-group>
-                        <v-slider
-                                v-if="labels.length!==1"
-                                v-model="point_i"
-                                :tick-labels= labels
-                                :max= labels.length-1
-                                step="1"
-                                ticks="always"
-                                tick-size="4"
-                        ></v-slider>
-                        <div v-else class="ma-4 text-center" >
-                            <h1>{{labels[point_i]}}</h1>
-                        </div>
+
 
 
                     </v-card-text>
                 </v-card>
-
+                <v-card-text>
+                <v-slider
+                        v-if="labels.length!==1"
+                        v-model="point_i"
+                        :tick-labels= labels
+                        :max= labels.length-1
+                        step="1"
+                        ticks="always"
+                        tick-size="4"
+                ></v-slider>
+                <div v-else class="ma-4 text-center" >
+                    <h1>{{labels[point_i]}}</h1>
+                </div>
+                </v-card-text>
                 <div class="float-right">
                     <NewCategory></NewCategory>
                 <v-btn @click="reset" text>Отмена</v-btn>

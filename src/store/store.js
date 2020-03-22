@@ -51,6 +51,7 @@ export const store = new Vuex.Store({
         categories:[],
         logged_user:{},
         feedback_messages:[],
+        products:[],
 
 
     },
@@ -74,6 +75,9 @@ export const store = new Vuex.Store({
         },
         feedback_messages(state){
             return state.feedback_messages;
+        },
+        products(state){
+            return state.products;
         },
 
 
@@ -106,6 +110,9 @@ export const store = new Vuex.Store({
         add_cat(state, cat){
             state.categories.push(cat)
         },
+        add_product(state, prod){
+            state.categories.push(prod)
+        },
         //setters
         retrieveToken_r(state, token){
             state.token_r = token;
@@ -116,6 +123,9 @@ export const store = new Vuex.Store({
 
         set_users_list(state, list){
             state.users_list = list;
+        },
+        set_products(state, list){
+            state.products = list;
         },
         set_transactions(state, transactions){
             state.transactions = transactions;
@@ -152,6 +162,12 @@ export const store = new Vuex.Store({
             state.users_list.splice(index,1,data);
         },
 
+        edit_product(state, data){
+            let index = state.products.findIndex(prod => prod.id === data.id);
+            // console.log(index);
+            state.products.splice(index,1,data);
+        },
+
 
         from_to_user(state, data){
             let index1 = state.users_list.findIndex(user => user.id === data.from_user);
@@ -165,6 +181,10 @@ export const store = new Vuex.Store({
         deleteuser(state, duser){
             const  index = state.users_list.findIndex(user => user===duser);
             state.users_list.splice(index,1)
+        },
+        delete_product(state, dprod){
+            const  index = state.products.findIndex(prod => prod===dprod);
+            state.products.splice(index,1)
         },
         destroyToken(state){
             state.token = "0";
@@ -531,6 +551,27 @@ export const store = new Vuex.Store({
         },
 
 
+        get_products: async (context) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.get('/products/')
+                    .then(response => {
+                        console.log(response.data);
+                        let products = response.data;
+                        context.commit("set_products", products );
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
+                        reject(error)
+                    })
+            })
+
+        },
+
 
         get_excel:async (context, data)=>{
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token;
@@ -549,7 +590,64 @@ export const store = new Vuex.Store({
             })
         },
 
+        add_new_product: async (context, message) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/products/', message)
+                    .then(response => {
+                        console.log(response.data);
+                        resolve(response)
 
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
+                        reject(error)
+                    })
+            })
+
+        },
+
+        edit_product: async (context, edit) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.patch('/products/'+edit.id+'/', edit.data)
+                    .then(response => {
+                        console.log(response.data);
+                        let prod = response.data;
+                        context.commit("edit_product", prod);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+
+        },
+
+        delete_product: async (context, product)=>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.delete('/products/'+product.id+'/')
+                    .then(response => {
+                        console.log(response.data);
+                        context.commit("delete_prod", product);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                        reject(error)
+                    })
+            })
+
+        },
 
 
 
@@ -558,7 +656,11 @@ export const store = new Vuex.Store({
             HTTP.defaults.headers.common['Authorization'] = "Token " + context.state.token;
             return new Promise((resolve, reject)=>
             {
-                HTTP.post('watermark/', fd )
+                HTTP.post('watermark/', fd,
+                    { headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
                     .then(response => {
                         console.log(response.data);
                         resolve(response)

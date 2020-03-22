@@ -22,6 +22,7 @@ import SpecialMenu from "./components/SpecialMenu";
 import MarketManagement from "./components/MarketManagement";
 import Inbox from "./components/Inbox";
 import CategoryManagement from "./components/CategoryManagement";
+import Product from "./components/Product";
 
 Vue.config.productionTip = false;
 
@@ -72,9 +73,13 @@ const routes = [
   {path: '/', component: Main, beforeEnter: ifAuthenticated, meta: {title: "Главная"}},
   {path: '/users', component: Users, beforeEnter: ifAuthenticated, meta: {title: "Коллеги"}},
   {path: '/shop', component: Shop, beforeEnter: ifAuthenticated, meta: {title: "Маркетплейс"}},
+  {path: '/shop/:id', component: Product, beforeEnter: ifAuthenticated, meta: {title: "lol"}},
+
   {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
   {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},
   {path: '/feedback', component: Feedback, beforeEnter: ifAuthenticated, meta: {title: "Обратная связь"}},
+
+
 
   {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"},
     children: [
