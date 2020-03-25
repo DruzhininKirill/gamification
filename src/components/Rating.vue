@@ -1,4 +1,5 @@
 <template>
+    <div>
     <v-card >
         <v-card-title>
             Рейтинг
@@ -36,6 +37,7 @@
 
         </v-data-table>
     </v-card>
+    </div>
 </template>
 
 <script>

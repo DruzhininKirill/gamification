@@ -135,10 +135,21 @@
         },
         methods: {
             edit_product() {
-
+                alert('kiki')
                 const fd = new FormData()
+
+                try {
+                    if (this.file.type.match("image.*")){
+                        fd.append('image', this.file);
+                    }
+                }
+                finally {
+
+
+
+
+
                 fd.append('id', this.id);
-                fd.append('image', this.file);
                 fd.append('name', this.name);
                 fd.append('description', this.description);
                 fd.append('price', this.price)
@@ -151,7 +162,7 @@
                 };
 
                 this.$store.dispatch('edit_product', data)
-
+                }
 
                 // this.name = '';
                 // this.description = '';

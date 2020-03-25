@@ -52,10 +52,16 @@ export const store = new Vuex.Store({
         logged_user:{},
         feedback_messages:[],
         products:[],
+        cart: JSON.parse(localStorage.getItem('cart')) || {'products':[], 'numbers':[]}
 
 
     },
     getters:{
+
+        cart(state){
+            return state.cart;
+        },
+
         users_list(state){
             return state.users_list.sort(function(a, b){  return b.personal_points-a.personal_points});
         },
@@ -103,6 +109,25 @@ export const store = new Vuex.Store({
     mutations: {
 
         //adding smth new to lists
+
+        add_to_cart(state, item){
+            let index = state.cart.products.findIndex(prod => prod.id === item.id);
+            if (index === -1){
+                state.cart.products.push(item);
+                state.cart.numbers.push(1);
+            }
+            else state.cart.numbers.splice(index,1, state.cart.numbers[index]+=1);
+            localStorage.setItem('cart', JSON.stringify(state.cart))
+        },
+        remove_from_cart(state, item){
+            let index = state.cart.products.findIndex(prod => prod.id === item.id);
+            if (state.cart.numbers[index] === 1){
+                state.cart.products.splice(index,1);
+                state.cart.numbers.splice(index,1);
+            }
+            else state.cart.numbers.splice(index,1, state.cart.numbers[index]-=1);
+            localStorage.setItem('cart', JSON.stringify(state.cart))
+        },
 
         add_user(state, user){
             state.users_list.push(user)
@@ -192,6 +217,13 @@ export const store = new Vuex.Store({
 
     },
     actions:{
+
+        add_to_cart(context, item){
+            context.commit('add_to_cart', item)
+        },
+        remove_from_cart(context, item){
+            context.commit('remove_from_cart', item)
+        },
 
         refreshToken(context){
             return new Promise((resolve, reject)=>

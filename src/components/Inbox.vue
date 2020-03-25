@@ -1,4 +1,5 @@
 <template>
+    <div>
     <v-card
             width="100%"
             class="mx-auto"
@@ -45,6 +46,7 @@
             </v-expansion-panels>
 
     </v-card>
+    </div>
 </template>
 
 <script>

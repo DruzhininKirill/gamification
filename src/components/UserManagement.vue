@@ -1,4 +1,5 @@
 <template>
+    <div>
     <v-data-table
             :headers="headers"
             :items="users_list"
@@ -42,7 +43,7 @@
         </template>
     </v-data-table>
 
-
+    </div>
 </template>
 
 

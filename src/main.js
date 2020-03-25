@@ -69,10 +69,12 @@ const ifPermissioned = (to, from, next) => {
 
 
 
+
+
 const routes = [
   {path: '/', component: Main, beforeEnter: ifAuthenticated, meta: {title: "Главная"}},
   {path: '/users', component: Users, beforeEnter: ifAuthenticated, meta: {title: "Коллеги"}},
-  {path: '/shop', component: Shop, beforeEnter: ifAuthenticated, meta: {title: "Маркетплейс"}},
+  {path: '/shop', component: Shop, beforeEnter: ifAuthenticated,  meta: {title: "Маркетплейс"}},
   {path: '/shop/:id', component: Product, beforeEnter: ifAuthenticated, meta: {title: "lol"}},
 
   {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},

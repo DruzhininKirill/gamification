@@ -1,4 +1,5 @@
 <template>
+    <div>
     <v-stepper v-model="e1">
         <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1" editable>Выбор Пользователей</v-stepper-step>
@@ -179,6 +180,7 @@
             </v-stepper-content>
         </v-stepper-items>
     </v-stepper>
+    </div>
 </template>
 <script>
     import NewCategory from "./NewCategory";

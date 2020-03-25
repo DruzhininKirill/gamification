@@ -9,7 +9,7 @@
 
                 >
                     <v-toolbar flat color="green" dark>
-                        <v-toolbar-title>Получить XSLS на почту</v-toolbar-title>
+                        <v-toolbar-title>Получить XLS на почту</v-toolbar-title>
 
                     </v-toolbar>
                     <v-list>
@@ -17,14 +17,14 @@
                         <v-list-item-content>
                             <span>Пользователи</span>
                         </v-list-item-content>
-                        <v-checkbox color="green"  value="Users5" v-model="selected"></v-checkbox>
+                        <v-checkbox color="green"  value="Users" v-model="selected"></v-checkbox>
                     </v-list-item>
 
                         <v-list-item >
                             <v-list-item-content>
                                 <span>Транзакции</span>
                             </v-list-item-content>
-                            <v-checkbox color="green"  value="Transactions7" v-model="selected"></v-checkbox>
+                            <v-checkbox color="green"  value="Transactions" v-model="selected"></v-checkbox>
                         </v-list-item>
                     </v-list>
 

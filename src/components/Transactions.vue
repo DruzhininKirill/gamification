@@ -1,5 +1,5 @@
 <template>
-
+<div>
     <v-card >
         <v-card-title >
             История операций
@@ -38,6 +38,7 @@
             </template>
         </v-data-table>
     </v-card>
+</div>
 </template>
 
 <script>
