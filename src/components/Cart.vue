@@ -1,7 +1,19 @@
 <template>
-    <v-dialog v-model="dialog" max-width="500px">
+    <v-dialog v-model="dialog" max-width="500px" >
         <template v-slot:activator="{ on }">
-            <v-btn class="mr-3" color="green" v-on='on' rounded dark><v-icon >table_chart</v-icon></v-btn>
+
+                <v-app-bar-nav-icon class="ma-3" v-on="on">
+                    <v-badge
+                            color="green"
+                            :content="cart.numbers.reduce((a, b) => a + b, 0)"
+                            :value="cart.numbers.reduce((a, b) => a + b, 0)"
+
+                    >
+                    <v-icon large>shopping_cart </v-icon>
+                     </v-badge>
+                </v-app-bar-nav-icon>
+
+
         </template>
         <v-card >
             <v-form
@@ -11,17 +23,8 @@
                     <v-toolbar-title>Корзина</v-toolbar-title>
 
                 </v-toolbar>
-                <v-list>
+                <v-list v-if="cart.products.length>0">
                     <v-list-item v-for="(item, index) in cart.products" v-bind:key="item.id" >
-
-<!--                            <v-avatar tile size="100">-->
-<!--                                <v-img :src="item.image"></v-img>-->
-<!--                            </v-avatar>-->
-<!--                            <div class="subheading">{{item.name}}</div>-->
-<!--                            <div class="text&#45;&#45;secondary">{{item.price}}</div>-->
-<!--                            <div class="float-right">{{cart.numbers[index]}}</div>-->
-
-
                         <v-list-item-content>
                             <v-layout align-center >
                             <v-img class="v-avatar--tile mr-3"  max-width="100px" :src="item.image"></v-img>
@@ -40,16 +43,22 @@
                             </v-layout>
                         </v-list-item-content>
 
-
                     </v-list-item>
                     <v-divider></v-divider>
-                    <span class="text--accent-2">Итог: {{ sum}}</span>
+                    <div class="text--accent-1 mr-6 float-right">Итог: {{ sum}}</div>
 
                 </v-list>
 
+                <v-card-text v-else class="text-center mt-5 mb-5">
+                    <v-icon large>shop</v-icon>
+                    <h3>Ваша корзина пуста</h3>
+                </v-card-text>
+
+
+
                 <v-card-actions>
                     <v-btn class="ma-2" outlined color="purple" @click="dialog=false"  >Вернуться</v-btn>
-                    <v-btn class="ma-2" right outlined color="purple" @click="dialog=false"  >Оформить</v-btn>
+                    <v-btn class="ma-2" right outlined color="purple" type="submit"  >Оформить</v-btn>
                 </v-card-actions>
 
 
@@ -81,7 +90,15 @@
 
         methods:{
             new_order(){
-                return 0
+                let order = this.cart.products;
+                // let nu = this.cart.numbers;
+
+                let data = {'products':[]};
+                order.forEach((product, i) => data.products.push({'product':product.id, 'quantity' : this.cart.numbers[i]}));
+
+                // let data = {'products':[{'product':order[0].id, 'quantity':nu[0]}]};
+                alert(JSON.stringify(data));
+                this.$store.dispatch("new_order", data)
             },
             increase(item){
                 this.$store.dispatch('add_to_cart', item)

@@ -102,7 +102,7 @@
         data:()=>({
             search: localStorage.getItem('search') || "",
             filter: localStorage.getItem("filter")|| '',
-            filters: ["Цена. По возрастанию","Цена. По убыванию"],
+            filters: ["Цена. По убыванию","Цена. По возрастанию"],
 
 
         }),

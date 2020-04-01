@@ -38,7 +38,7 @@
                 },
                 {
                     id: 2,
-                    icon: 'book',
+                    icon: 'storefront',
                     name: 'Маркетплейс',
                     color: 'purple',
                     path:'marketmanagement'
@@ -47,7 +47,8 @@
                     id: 3,
                     icon: 'add',
                     name: 'Заказы',
-                    color: 'orange'
+                    color: 'orange',
+                    path: 'orders'
                 },
                 {
                     id: 4,
@@ -58,7 +59,7 @@
                 },
                 {
                     id: 5,
-                    icon: 'book',
+                    icon: 'category',
                     name: 'Категории',
                     color: 'blue',
                     path: 'promotions'

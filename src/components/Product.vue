@@ -1,6 +1,7 @@
 <template >
     <div>
     <v-toolbar flat color="none">
+
         <v-app-bar-nav-icon class="ma-3" v-on:click="$router.push('/shop')">
             <v-icon large>navigate_before </v-icon> <span>Назад</span>
         </v-app-bar-nav-icon>

@@ -41,7 +41,7 @@
 
         <v-list-item link to="/rating">
           <v-list-item-action>
-            <v-icon>score</v-icon>
+            <v-icon>stars</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Рейтинг</v-list-item-title>
@@ -50,7 +50,7 @@
 
         <v-list-item link to="/shop">
           <v-list-item-action>
-            <v-icon>shop</v-icon>
+            <v-icon>store</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Маркетплейс</v-list-item-title>
@@ -59,7 +59,7 @@
 
         <v-list-item link to="/transactions">
           <v-list-item-action>
-            <v-icon>money</v-icon>
+            <v-icon>history</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>История операций</v-list-item-title>

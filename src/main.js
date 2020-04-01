@@ -23,6 +23,7 @@ import MarketManagement from "./components/MarketManagement";
 import Inbox from "./components/Inbox";
 import CategoryManagement from "./components/CategoryManagement";
 import Product from "./components/Product";
+import Orders from "./components/Orders";
 
 Vue.config.productionTip = false;
 
@@ -109,6 +110,11 @@ const routes = [
         path: 'promotions',
         component: CategoryManagement,
         meta: {title:"Поощерения"}
+      },
+      {
+        path: 'orders',
+        component: Orders,
+        meta: {title:"Заказы"}
       },
     ]},
 

@@ -53,7 +53,8 @@
                let data={
                    'selected': this.selected
                };
-               this.$store.dispatch('get_excel', data)
+               this.$store.dispatch('get_excel', data);
+               this.dialog = false
            }
         }
     }

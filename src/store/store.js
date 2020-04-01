@@ -52,6 +52,7 @@ export const store = new Vuex.Store({
         logged_user:{},
         feedback_messages:[],
         products:[],
+        orders:[],
         cart: JSON.parse(localStorage.getItem('cart')) || {'products':[], 'numbers':[]}
 
 
@@ -60,6 +61,9 @@ export const store = new Vuex.Store({
 
         cart(state){
             return state.cart;
+        },
+        orders(state){
+            return state.orders;
         },
 
         users_list(state){
@@ -151,6 +155,9 @@ export const store = new Vuex.Store({
         },
         set_products(state, list){
             state.products = list;
+        },
+        set_orders(state, list){
+            state.orders = list;
         },
         set_transactions(state, transactions){
             state.transactions = transactions;
@@ -675,6 +682,46 @@ export const store = new Vuex.Store({
                     })
                     .catch(error =>{
                         console.log(error);
+                        reject(error)
+                    })
+            })
+
+        },
+
+        new_order: async (context, message) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/orders/', message)
+                    .then(response => {
+                        console.log(response.data);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
+                        reject(error)
+                    })
+            })
+
+        },
+
+        get_orders: async (context) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.get('/orders/')
+                    .then(response => {
+                        console.log(response.data);
+                        let orders = response.data;
+                        context.commit("set_orders", orders );
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
                         reject(error)
                     })
             })
