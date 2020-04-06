@@ -111,10 +111,10 @@
             return {
                 dialog:false,
 
-                name: "q",
-                description: "q",
-                price: "q",
-                quantity: "q",
+                name: "",
+                description: "",
+                price: "",
+                quantity: "",
                 in_stock: false,
                 file:'',
                 image:'',

@@ -3,6 +3,7 @@ import Vuex from "vuex"
 import axios from "axios";
 export const HTTP = axios.create({
     baseURL: 'http://localhost:8000/api/v1/'});
+    // baseURL: 'https://murano-gamification.herokuapp.com/api/v1/'});
 
 
 HTTP.interceptors.request.use(function (config) {
@@ -199,6 +200,12 @@ export const store = new Vuex.Store({
             // console.log(index);
             state.products.splice(index,1,data);
         },
+        change_order_status(state, data){
+            let index = state.orders.findIndex(order => order.id === data.id);
+            state.orders[index].delivered_at = data.delivered_at;
+            let updated = state.orders[index].active = data.active;
+            state.products.splice(index,1,updated);
+        },
 
 
         from_to_user(state, data){
@@ -296,7 +303,20 @@ export const store = new Vuex.Store({
 
                     })
                     .catch(error =>{
-                        console.log(error);
+                        if (error.response.status >=400 && error.response.status <500 ){
+                            Vue.prototype.$vToastify.error({
+                                title: "Ошибка доступа",
+                                body: "Проверьте правильность введённых данных",
+                                theme: 'light'
+                            });
+                        }
+                        else {
+                            Vue.prototype.$vToastify.error({
+                                title: "Что-то пошло не так...",
+                                body: error,
+                                theme: 'light'
+                            });
+                        }
                         reject(error)
                     })
             })
@@ -383,13 +403,21 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/transactions/', data)
                     .then(response => {
-                        // console.log("KIKIKI");
-                        // console.log(response.data);
-                        context.commit("from_to_user", data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Баллы успешно переведены",
+                            body: "Перевели с Вашего счета "+ response.data.amount +"Б",
+                            theme: 'light'
+                        });
+                        context.commit("from_to_user", response.data);
                         resolve(response)
 
                     })
                     .catch(error =>{
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         console.log(error);
                         reject(error)
                     })
@@ -399,20 +427,27 @@ export const store = new Vuex.Store({
 
 
         add_super_transaction: async (context, data) =>{
-            alert("kiki");
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
             {
                 HTTP.post('/supertransactions/', data)
                     .then(response => {
-                        // console.log("KIKIKI");
-                        console.log(response.data);
-                        // context.commit("from_to_user", data);
+
+                        Vue.prototype.$vToastify.success({
+                            title: "Баллы успешно зачислены",
+                            body: "Вы великолепны!",
+
+                        });
                         resolve(response)
 
                     })
                     .catch(error =>{
-                        console.log(error);
+                        console.log(JSON.stringify(error));
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+
+                        });
                         reject(error)
                     })
             })
@@ -427,20 +462,21 @@ export const store = new Vuex.Store({
                 let id = store.getters.get_id_from_token;
                 HTTP.patch('/users/'+id+'/', edit)
                     .then(response => {
-                        // console.log("KIKIKI");
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Изменения сохранены",
+                            theme: 'light'
+                        });
                         let user = response.data;
                         context.commit("edit_user", user);
                         resolve(response)
 
                     })
                     .catch(error =>{
-                        console.log(error);
-                        // if (error.response.status === 401) {
-                        //     localStorage.setItem("auth_token_access", 0);
-                        //
-                        //     window.location.reload(true)
-                        // }
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
 
                         console.log(error);
                         reject(error)
@@ -462,20 +498,20 @@ export const store = new Vuex.Store({
             {
                 HTTP.patch('/users/'+edit.id+'/', edit)
                     .then(response => {
-                        // console.log("KIKIKI");
-                        console.log(response.data);
-                        // let user = response.data;
+                        Vue.prototype.$vToastify.success({
+                            title: "Уровень доступа пользователя успешно изменен",
+                            theme: 'light'
+                        });
                         context.commit("admin_edit_user", user);
                         resolve(response)
 
                     })
                     .catch(error =>{
-                        console.log(error);
-                        // if (error.response.status === 401) {
-                        //     localStorage.setItem("auth_token_access", 0);
-                        //
-                        //     window.location.reload(true)
-                        // }
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
 
                         console.log(error);
                         reject(error)
@@ -493,12 +529,21 @@ export const store = new Vuex.Store({
             {
                 HTTP.delete('/users/'+user.id+'/')
                     .then(response => {
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Пользователь удален",
+                            body: "Оно и к лучшему",
+                            theme: 'light'
+                        });
                         context.commit("delete_user", user);
                         resolve(response)
 
                     })
                     .catch(error =>{
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         console.log(error);
                         reject(error)
                     })
@@ -512,14 +557,21 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/users/', user)
                     .then(response => {
-                        // console.log("KIKIKI");
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Пользователь "+user.first_name + " "+user.last_name+" успешно добавлен в систему",
+                            theme: 'light'
+                        });
                         let newuser = response.data;
                         context.commit("add_user", newuser);
                         resolve(response)
 
                     })
                     .catch(error =>{
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         console.log(error);
                         reject(error)
                     })
@@ -533,6 +585,10 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/categories/', cat)
                     .then(response => {
+                        Vue.prototype.$vToastify.success({
+                            title: "Новая категория "+ cat.name + " добавлена",
+                            theme: 'light'
+                        });
                         let newcat = response.data;
                         newcat.values= newcat.values.split(',');
                         context.commit("add_cat", newcat);
@@ -540,6 +596,11 @@ export const store = new Vuex.Store({
 
                     })
                     .catch(error =>{
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         console.log(error);
                         reject(error)
                     })
@@ -555,12 +616,21 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/feedbackmessages/', message)
                     .then(response => {
-                       console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Сообщение обрабатывается",
+                            body: "ожидайте уведомление на почту",
+                            theme: 'light'
+                        });
                         resolve(response)
 
                     })
                     .catch(error =>{
                         console.log(error);
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
 
                         reject(error)
                     })
@@ -618,11 +688,20 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/excel/', data )
                     .then(response => {
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Идёт сбор данных",
+                            body: "ожидайте уведомление на почту",
+                            theme: 'light'
+                        });
                         resolve(response)
 
                     })
                     .catch(error =>{
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: "на почту ничего не пришлём :(",
+                            theme: 'light'
+                        });
                         console.log(error);
                         reject(error)
                     })
@@ -635,13 +714,22 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/products/', message)
                     .then(response => {
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Товар добален",
+                            body: "Посетите Murano Market",
+                            theme: 'light'
+                        });
+
                         resolve(response)
 
                     })
                     .catch(error =>{
                         console.log(error);
-
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         reject(error)
                     })
             })
@@ -654,14 +742,21 @@ export const store = new Vuex.Store({
             {
                 HTTP.patch('/products/'+edit.id+'/', edit.data)
                     .then(response => {
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Изменения сохранены",
+                            theme: 'light'
+                        });
                         let prod = response.data;
                         context.commit("edit_product", prod);
                         resolve(response)
 
                     })
                     .catch(error =>{
-
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         console.log(error);
                         reject(error)
                     })
@@ -669,19 +764,59 @@ export const store = new Vuex.Store({
 
         },
 
+
+        restock_product: async (context, edit) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.patch('/products/'+edit.id+'/', edit.data)
+                    .then(response => {
+
+                        Vue.prototype.$vToastify.success({
+                            title: "Данный товар теперь "+ (edit.data.in_stock) ? 'доступен' : 'недоступен' + "в маркете",
+                            theme: 'light'
+                        });
+                        let prod = response.data;
+                        context.commit("edit_product", prod);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так... но вероятнее, проблема ток с респонсом",
+                            body: error,
+                            theme: 'light'
+                        });
+                        reject(error)
+                    })
+            })
+
+        },
+
+
         delete_product: async (context, product)=>{
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
             {
                 HTTP.delete('/products/'+product.id+'/')
                     .then(response => {
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Товар удален",
+                            theme: 'light'
+                        });
                         context.commit("delete_prod", product);
                         resolve(response)
 
                     })
                     .catch(error =>{
                         console.log(error);
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
+
                         reject(error)
                     })
             })
@@ -694,13 +829,20 @@ export const store = new Vuex.Store({
             {
                 HTTP.post('/orders/', message)
                     .then(response => {
-                        console.log(response.data);
+                        Vue.prototype.$vToastify.success({
+                            title: "Ваш заказ успешно оформлен",
+                            body: "Администратор свяжется с Вами при необходимости уточнить данные или время доставки",
+                            theme: 'light'
+                        });
                         resolve(response)
 
                     })
                     .catch(error =>{
-                        console.log(error);
-
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error.response.data,
+                            theme: 'light'
+                        });
                         reject(error)
                     })
             })
@@ -722,6 +864,32 @@ export const store = new Vuex.Store({
                     .catch(error =>{
                         console.log(error);
 
+                        reject(error)
+                    })
+            })
+
+        },
+        change_order_status: async (context, order) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.patch('/orders/'+order.id+'/', order)
+                    .then(response => {
+                        Vue.prototype.$vToastify.success({
+                            title: "Статус заказа изменен",
+                            theme: 'light'
+                        });
+                        let upd = response.data;
+                        context.commit("change_order_status", upd);
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        Vue.prototype.$vToastify.error({
+                            title: "Что-то пошло не так...",
+                            body: error,
+                            theme: 'light'
+                        });
                         reject(error)
                     })
             })

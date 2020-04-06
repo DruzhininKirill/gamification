@@ -27,6 +27,8 @@ import Orders from "./components/Orders";
 
 Vue.config.productionTip = false;
 
+import VueToastify from "vue-toastify";
+Vue.use(VueToastify);
 
 Vue.use(Vuetify);
 export default new Vuetify({
@@ -50,22 +52,51 @@ const ifNotAuthenticated = (to, from, next) => {
 
 const ifAuthenticated = (to, from, next) => {
   if (store.getters.loggedIn) {
-    next()
+    if(store.getters.users_list.length === 0){
+      store.dispatch('getallusers').then(
+          next()
+      )
+    }
+    else next();
+
     return
   }
   next('/login')
 };
 const ifPermissioned = (to, from, next) => {
-  // alert( store.getters.loggedIn);
-  // alert(store.getters.permissioned);
-
-  if (store.getters.loggedIn && store.getters.permissioned) {
-      next();
-      return
-  }
-  // alert("KIK");
-  // console.log("kik");
+  if (store.getters.loggedIn) {
+    if (store.getters.users_list.length === 0) {
+      store.dispatch('getallusers').then(() => {
+        if ((store.getters.logged_user.is_teamlead) || store.getters.logged_user.is_staff) {
+          next();
+        } else next('/')
+      });
+    } else {
+      if (( store.getters.logged_user.is_teamlead) || store.getters.logged_user.is_staff) {
+        next();
+        return
+      } else next('/')
+    }
+  }else
   next('/login')
+};
+
+const ifStaff = (to, from, next) => {
+  if (store.getters.loggedIn) {
+    if (store.getters.users_list.length === 0) {
+      store.dispatch('getallusers').then(() => {
+        if ( store.getters.logged_user.is_staff) {
+          next();
+        } else next('/special')
+      });
+    } else {
+      if (store.getters.logged_user.is_staff) {
+        next();
+        return
+      } else next('/special')
+    }
+  }else
+    next('/login')
 };
 
 
@@ -92,26 +123,31 @@ const routes = [
         meta: {title:"Cпециальные возможности"}
       },
       {
+        beforeEnter: ifStaff,
         path: 'usermanagement',
         component: UserManagement,
         meta: {title:"Управление пользователями"}
       },
       {
+        beforeEnter: ifStaff,
         path: 'marketmanagement',
         component: MarketManagement,
         meta: {title:"Управление маркетплейсом"}
       },
       {
+        beforeEnter: ifStaff,
         path: 'inbox',
         component: Inbox,
         meta: {title:"Почта"}
       },
       {
+        beforeEnter: ifPermissioned,
         path: 'promotions',
         component: CategoryManagement,
         meta: {title:"Поощерения"}
       },
       {
+        beforeEnter: ifStaff,
         path: 'orders',
         component: Orders,
         meta: {title:"Заказы"}

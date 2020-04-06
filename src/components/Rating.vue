@@ -1,43 +1,61 @@
 <template>
-    <div>
-    <v-card >
-        <v-card-title>
-            Рейтинг
-            <v-spacer></v-spacer>
-            <v-text-field
-                    v-model="search"
-                    append-icon="magnify"
-                    label="Search"
-                    single-line
-                    hide-details
+    <v-layout column >
+        <v-layout column >
+            <div class="text-center ma-3"  >
+                <h1>Рейтинг</h1>
+                <span  class="subtitle-1" style="max-width: 800px">
+                    Поделись баллами спасибо с коллегами по отделу и помоги им добраться до верхушки таблицы
+                </span>
+            </div>
+        </v-layout>
 
-            ></v-text-field>
-        </v-card-title>
-        <v-data-table
-                :headers="headers"
-                :items="users_list"
-                :search="search"
-                disable-pagination
 
-                hide-default-footer
+        <v-layout justify-space-between
+                  flat
+                  color="transparent"
         >
-            <template v-slot:item.place="{ item }">
 
-                    {{users_list.map(function(x) {return x.id; }).indexOf(item.id)+1}}
+            <v-card width="100%" flat>
+                <v-flex lg3 md4 sm4>
+                    <v-text-field
 
-            </template>
+                            class="ma-3"
+                            v-model="search"
+                            append-icon="search"
+                            label="Поиск"
+                            single-line
+                    ></v-text-field>
+                </v-flex>
+                <v-data-table
+                        :headers="headers"
+                        :items="users_list"
+                        :search="search"
+                        disable-pagination
+
+                        hide-default-footer
+                >
+                    <template v-slot:item.place="{ item }">
+
+                        {{users_list.map(function(x) {return x.id; }).indexOf(item.id)+1}}
+
+                    </template>
 
 
-            <template v-slot:item.add_button="{ item }">
+                    <template v-slot:item.add_button="{ item }">
 
-                <SharePointsDialog :item="item" @addpoints="addpoints"></SharePointsDialog>
+                        <SharePointsDialog :item="item" @addpoints="addpoints"></SharePointsDialog>
 
 
-            </template>
+                    </template>
 
-        </v-data-table>
-    </v-card>
-    </div>
+                </v-data-table>
+            </v-card>
+
+
+        </v-layout>
+
+    </v-layout>
+
 </template>
 
 <script>
@@ -64,7 +82,7 @@
                     { text: 'Фамилия', value: 'last_name', sortable: false ,  },
                     { text: 'Баллы спасибо', value: 'share_points' },
                     { text: 'Копилка', value: 'personal_points' },
-                    { text: '', value: 'add_button', sortable: false , },
+                    { text: '', value: 'add_button', sortable: false , align:'center' },
                 ],
 
             }

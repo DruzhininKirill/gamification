@@ -1,4 +1,13 @@
 <template>
+    <v-layout column>
+        <v-layout column >
+            <div class="text-center ma-3"  >
+                <h1>Коллеги</h1>
+                <span  class="subtitle-1" style="max-width: 800px">
+                    Героев нужно знать в лицо!
+                </span>
+            </div>
+        </v-layout>
                 <v-layout row wrap >
                 <v-flex xs12 sm6 md4 lg3 v-for="user in colleagues()" :key="user.id">
                     <v-card class="text-center ma-3">
@@ -35,6 +44,7 @@
 
                 </v-flex>
             </v-layout>
+    </v-layout>
 </template>
 
 <script>
@@ -45,6 +55,11 @@
         data:()=>({
 
         }),
+
+        beforeCreate() {
+            this.$store.dispatch("getallusers");
+        },
+
         computed: {
             users_list(){
                 return this.$store.getters.users_list

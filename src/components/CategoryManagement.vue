@@ -1,5 +1,13 @@
 <template>
-    <div>
+    <v-layout column align-center>
+        <v-layout column >
+            <div class="text-center ma-3"  >
+                <h1>Особые поощрения </h1>
+                <span  class="subtitle-1" style="max-width: 800px">
+                    Баллы, начисленные через особые поощрения будут добавлены пользователям из общего банка баллов
+                </span>
+            </div>
+        </v-layout>
     <v-stepper v-model="e1">
         <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1" editable>Выбор Пользователей</v-stepper-step>
@@ -180,7 +188,7 @@
             </v-stepper-content>
         </v-stepper-items>
     </v-stepper>
-    </div>
+    </v-layout>
 </template>
 <script>
     import NewCategory from "./NewCategory";

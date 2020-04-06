@@ -1,6 +1,6 @@
 <template>
-<div>
-    <v-card >
+<v-layout >
+    <v-card width="100%" >
         <v-card-title >
             История операций
             <v-spacer></v-spacer>
@@ -38,7 +38,7 @@
             </template>
         </v-data-table>
     </v-card>
-</div>
+</v-layout>
 </template>
 
 <script>

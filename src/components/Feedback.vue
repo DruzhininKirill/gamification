@@ -74,6 +74,7 @@
 
                 };
                 this.$store.dispatch("send_feedback", message);
+
             }
         }
     }

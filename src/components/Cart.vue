@@ -91,14 +91,10 @@
         methods:{
             new_order(){
                 let order = this.cart.products;
-                // let nu = this.cart.numbers;
-
                 let data = {'products':[]};
                 order.forEach((product, i) => data.products.push({'product':product.id, 'quantity' : this.cart.numbers[i]}));
-
-                // let data = {'products':[{'product':order[0].id, 'quantity':nu[0]}]};
-                alert(JSON.stringify(data));
                 this.$store.dispatch("new_order", data)
+                this.dialog = false;
             },
             increase(item){
                 this.$store.dispatch('add_to_cart', item)

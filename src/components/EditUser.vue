@@ -101,7 +101,7 @@
                                         rows="3"
                                         v-model="profile"
                                         color="indigo"
-                                        label="Профиль"
+                                        label="О себе"
                                         required
                                 ></v-textarea>
                             </v-col>

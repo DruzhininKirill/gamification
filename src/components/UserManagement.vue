@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <v-layout>
+
+
+    <div style="width: 100%">
     <v-data-table
             :headers="headers"
             :items="users_list"
@@ -44,6 +47,7 @@
     </v-data-table>
 
     </div>
+    </v-layout>
 </template>
 
 
@@ -84,16 +88,36 @@
         methods: {
 
             change_is_staff(item){
-                item.is_staff = !item.is_staff;
+                this.$vToastify.prompt({
+                    body: "Вы уверены, что хотите изменить статус администратора"+ item.first_name  +
+                        " "+item.last_name+ "?",
+                    answers: { "Да": true, "Нет": false },
+                    theme: 'light'
+                }).then(value => {
+                    if (value) {
+                        item.is_staff = !item.is_staff;
+                        this.$store.dispatch("admin_edit_user", item)
+                    }
+                })
+
                 // this.changes = true;
 
 
-                this.$store.dispatch("admin_edit_user",item)
+
             },
             change_is_teamlead(item){
-                item.is_teamlead = !item.is_teamlead;
-                this.$store.dispatch("admin_edit_user",item)
-                // this.changes = true;
+
+                this.$vToastify.prompt({
+                    body: "Вы уверены, что хотите изменить статус тимлидера "+ item.first_name  +
+                        " "+item.last_name+ "?",
+                    answers: { "Да": true, "Нет": false },
+                    theme: 'light'
+                }).then(value => {
+                    if (value) {
+                        item.is_teamlead = !item.is_teamlead;
+                        this.$store.dispatch("admin_edit_user",item)
+                    }
+                })
             },
 
 
@@ -103,10 +127,18 @@
             },
 
             deleteItem (user) {
-                // const index = this.users_list.indexOf(user);
-                this.$store.dispatch("delete_user",user);
-                confirm('Are you sure you want to delete this item?') && this.$store.dispatch("delete_user",user);
-                // this.users_list.splice(index, 1)
+                this.$vToastify.prompt({
+                    body: "Вы уверены, что хотите удалить "+ user.first_name  +
+                        " "+user.last_name+ "?",
+                    answers: { "Да": true, "Нет": false },
+                    theme: 'light'
+                }).then(value => {
+                    if (value) {
+                        this.$store.dispatch("delete_user",user);
+                    }
+                })
+
+
             },
 
 

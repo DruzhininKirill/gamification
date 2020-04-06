@@ -9,7 +9,7 @@
                         <v-toolbar  color="primary" dark>
                             <v-toolbar-title>Личные данные</v-toolbar-title>
                         </v-toolbar>
-                        <v-tabs centered >
+                        <v-tabs centered mobile-break-point="300px">
                             <v-tab>
                                 <v-icon left>person</v-icon>
                                 Профиль
@@ -113,21 +113,12 @@
                             class="ma-3"
                     >
                         <v-toolbar
-                                color="primary"
+                                color="purple"
                                 dark
                         >
-                            <v-icon>send</v-icon>
+                            <v-icon class="mr-3">publish</v-icon>
 
                             <v-toolbar-title>Мои переводы</v-toolbar-title>
-
-                            <v-spacer></v-spacer>
-                            <span>новый</span>
-
-
-                            <template >
-                                <SharePointsMultitalk :item=user ></SharePointsMultitalk>
-<!--                                должен быть не юзер, а рандомный кто-то-->
-                            </template>
 
 
 
@@ -141,9 +132,13 @@
 
 
                             >
-                                <v-list-item-icon>
-                                    <v-icon> star</v-icon>
-                                </v-list-item-icon>
+                                <v-list-item-avatar>
+                                    <!--                                    <v-img :src="item.avatar"></v-img>-->
+                                    <v-avatar class="grey lighten-5 ma-3 align-self-center">
+                                        <img src="https://randomuser.me/api/portraits/men/78.jpg">
+                                    </v-avatar>
+
+                                </v-list-item-avatar>
 
                                 <v-list-item-content>
                                     <v-list-item-title v-text="get_user_by_id(item.to_user)  "> </v-list-item-title>
@@ -155,7 +150,10 @@
                                 >
 
                                 <v-list-item-icon>
-                                    <v-list-item-title  v-text="item.amount"> </v-list-item-title>
+                                    <v-list-item-title class="red--text" >
+                                        <span v-if="get_cat_by_id(item.category)=='Спасибо'">- </span>
+                                        {{item.amount}}
+                                    </v-list-item-title>
                                 </v-list-item-icon>
 
 
@@ -172,10 +170,10 @@
                             class="ma-3"
                     >
                         <v-toolbar
-                                color="primary"
+                                color="purple"
                                 dark
                         >
-                            <v-icon>send</v-icon>
+                            <v-icon class="mr-3">get_app</v-icon>
 
                             <v-toolbar-title>Мои зачисления</v-toolbar-title>
 
@@ -188,9 +186,13 @@
                                     :key="item.id"
 
                             >
-                                <v-list-item-icon>
-                                    <v-icon> star</v-icon>
-                                </v-list-item-icon>
+                                <v-list-item-avatar>
+<!--                                    <v-img :src="item.avatar"></v-img>-->
+                                    <v-avatar class="grey lighten-5 ma-3 align-self-center">
+                                        <img src="https://randomuser.me/api/portraits/men/78.jpg">
+                                    </v-avatar>
+
+                                </v-list-item-avatar>
 
                                 <v-list-item-content>
                                     <v-list-item-title v-text="get_user_by_id(item.from_user) "></v-list-item-title>
@@ -201,31 +203,24 @@
                                 </v-list-item-content>
 
                                 <v-list-item-icon>
-                                    <v-list-item-title v-text="item.amount"> </v-list-item-title>
-                                    <v-list-item-title v-text="item.amount"> </v-list-item-title>
+                                    <v-list-item-title class="green--text" >+ {{item.amount}} </v-list-item-title>
                                 </v-list-item-icon>
 
-<!--                                <v-list-item-avatar>-->
-<!--                                    <v-img :src="item.avatar"></v-img>-->
-<!--                                </v-list-item-avatar>-->
+
                             </v-list-item>
                         </v-list>
                     </v-card>
                 </v-flex>
             </v-layout>
-<!--        </v-container>-->
 
-
-<!--        <v-btn @click="refresh">refresh</v-btn>-->
-<!--    </div>-->
 </template>
 
 <script>
-    import SharePointsMultitalk from "./SharePointsMultitalk";
+
     import EditUser from "./EditUser";
     export default {
         name: "Main",
-        components: {EditUser, SharePointsMultitalk},
+        components: {EditUser},
         data:()=>({
             dialog:false,
         }),
@@ -272,7 +267,6 @@
                 return cat.name
             },
             reload(){
-                alert("ji");
                 this.user = this.$store.getters.logged_user()
             },
 

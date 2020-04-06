@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-layout>
     <v-card
             width="100%"
             class="mx-auto"
@@ -8,16 +8,14 @@
                 color="primary"
                 dark
         >
-            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            <v-icon class="mr-3">mail</v-icon>
 
             <v-toolbar-title>Входящие</v-toolbar-title>
 
-            <v-spacer></v-spacer>
-
-            <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>
         </v-toolbar>
+        <v-card-text class="mb-6 mt-6 text-center" v-if="feedback_messages.length === 0">
+            Пока сообщений нет
+        </v-card-text>
 
 
             <v-expansion-panels focusable>
@@ -46,7 +44,7 @@
             </v-expansion-panels>
 
     </v-card>
-    </div>
+    </v-layout>
 </template>
 
 <script>
