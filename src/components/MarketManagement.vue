@@ -72,7 +72,12 @@
 
 
         beforeCreate() {
-            this.$store.dispatch("get_products");
+            this.$store.dispatch("get_products").then(r=>{
+                console.log(r);
+                this.initialize()
+                }
+
+            );
 
         },
 
@@ -85,7 +90,7 @@
 
         },
 
-        created () {
+        beforeMount() {
             this.initialize()
         },
 
@@ -104,14 +109,16 @@
 
             restock(item){
                 item.in_stock = !item.in_stock
-                const fd = new FormData();
-                fd.append('in_stock', item.in_stock);
+                // const fd = new FormData();
+                // fd.append('in_stock', item.in_stock);
                 let data = {
                     'id': item.id,
-                    "data": fd
+                    'in_stock': item.in_stock,
+                    // "data": fd
                 };
 
                 this.$store.dispatch("restock_product", data)
+
             },
 
             delete_product(product){

@@ -119,6 +119,9 @@ export const store = new Vuex.Store({
             localStorage.removeItem('cart')
         },
 
+        ten_points_update(state){
+            state.users_list.forEach(user => user.share_points = 10 );
+        },
 
 
         add_to_cart(state, item){
@@ -211,6 +214,11 @@ export const store = new Vuex.Store({
             state.orders[index].delivered_at = data.delivered_at;
             let updated = state.orders[index].active = data.active;
             state.products.splice(index,1,updated);
+        },
+        restock_prod(state, data){
+            let index = state.products.findIndex(prod => prod.id === data.id);
+            state.products[index].in_stock = data.in_stock;
+            // state.products.splice(index,1,updated);
         },
 
 
@@ -401,6 +409,31 @@ export const store = new Vuex.Store({
 
         },
 
+        sharepoints: async (context) =>{
+            HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
+            return new Promise((resolve, reject)=>
+            {
+                HTTP.post('/sharepoints/')
+                    .then(response => {
+                        Vue.prototype.$vToastify.success({
+                            title: "Баллы успешно зачислены",
+                            body: "Все пользователи получили 10Б спасибо",
+                            theme: 'light'
+                        });
+                        console.log(response)
+                        // let data_cat = Array.from(response.data);
+                        context.commit("ten_points_update");
+                        resolve(response)
+
+                    })
+                    .catch(error =>{
+                        console.log(error);
+
+                        reject(error)
+                    })
+            })
+
+        },
 
 
         addpoints: async (context, data) =>{
@@ -775,15 +808,19 @@ export const store = new Vuex.Store({
             HTTP.defaults.headers.common['Authorization'] = "Bearer " + context.state.token_a;
             return new Promise((resolve, reject)=>
             {
-                HTTP.patch('/products/'+edit.id+'/', edit.data)
+                HTTP.patch('/products/'+edit.id+'/', edit)
                     .then(response => {
-
+                        let ans= ''
+                        if (edit.in_stock)
+                         ans = "Данный товар теперь "+  'доступен'+" в маркете"
+                        else  ans = "Данный товар теперь недоступен" + " в маркете"
                         Vue.prototype.$vToastify.success({
-                            title: "Данный товар теперь "+ (edit.data.in_stock) ? 'доступен' : 'недоступен' + "в маркете",
+                            title: "OK",
+                            body: ans,
                             theme: 'light'
                         });
-                        let prod = response.data;
-                        context.commit("edit_product", prod);
+                        // let prod = response.data;
+                        context.commit("restock_prod", edit);
                         resolve(response)
 
                     })

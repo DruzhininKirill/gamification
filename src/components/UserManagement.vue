@@ -18,6 +18,7 @@
                         vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
+                <v-btn color="purple" class="mr-3" rounded dark @click="month_upd"><v-icon >update</v-icon></v-btn>
                 <ExcelData></ExcelData>
                 <NewUser></NewUser>
 
@@ -142,8 +143,16 @@
             },
 
 
-            save () {
-
+            month_upd () {
+                this.$vToastify.prompt({
+                    body: "Вы уверены, что хотите обновить баллы спасибо?",
+                    answers: { "Да": true, "Нет": false },
+                    theme: 'light'
+                }).then(value => {
+                    if (value) {
+                        this.$store.dispatch("sharepoints");
+                    }
+                })
             },
         },
     }
