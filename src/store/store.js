@@ -113,7 +113,13 @@ export const store = new Vuex.Store({
     },
     mutations: {
 
-        //adding smth new to lists
+
+        clear_cart(state){
+            state.cart = {'products':[], 'numbers':[]};
+            localStorage.removeItem('cart')
+        },
+
+
 
         add_to_cart(state, item){
             let index = state.cart.products.findIndex(prod => prod.id === item.id);
@@ -834,6 +840,7 @@ export const store = new Vuex.Store({
                             body: "Администратор свяжется с Вами при необходимости уточнить данные или время доставки",
                             theme: 'light'
                         });
+                        context.commit("clear_cart" );
                         resolve(response)
 
                     })

@@ -267,7 +267,8 @@
                 return cat.name
             },
             reload(){
-                this.user = this.$store.getters.logged_user()
+                console.log('1')
+                // this.user = this.$store.getters.logged_user
             },
 
         }

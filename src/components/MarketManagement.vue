@@ -83,10 +83,6 @@
                 return this.$store.getters.products;
             },
 
-
-
-
-
         },
 
         created () {

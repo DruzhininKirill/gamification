@@ -28,6 +28,7 @@ import Orders from "./components/Orders";
 Vue.config.productionTip = false;
 
 import VueToastify from "vue-toastify";
+import Layout from "./components/Layout";
 Vue.use(VueToastify);
 
 Vue.use(Vuetify);
@@ -63,6 +64,21 @@ const ifAuthenticated = (to, from, next) => {
   }
   next('/login')
 };
+
+// const ifAuthenticatedLayout = (to, from, next) => {
+//   if (store.getters.loggedIn) {
+//     if(store.getters.users_list.length === 0){
+//       store.dispatch('getallusers').then(
+//           next('/main')
+//       )
+//     }
+//     else next('/main');
+//
+//     return
+//   }
+//   next('/login')
+// };
+
 const ifPermissioned = (to, from, next) => {
   if (store.getters.loggedIn) {
     if (store.getters.users_list.length === 0) {
@@ -104,55 +120,56 @@ const ifStaff = (to, from, next) => {
 
 
 const routes = [
-  {path: '/', component: Main, beforeEnter: ifAuthenticated, meta: {title: "Главная"}},
-  {path: '/users', component: Users, beforeEnter: ifAuthenticated, meta: {title: "Коллеги"}},
-  {path: '/shop', component: Shop, beforeEnter: ifAuthenticated,  meta: {title: "Маркетплейс"}},
-  {path: '/shop/:id', component: Product, beforeEnter: ifAuthenticated, meta: {title: "lol"}},
+  {path: '/', component: Layout, beforeEnter: ifAuthenticated, meta: {title: "0"},
+  children: [
+    {path: '/', component: Main, beforeEnter: ifAuthenticated, meta: {title: "Главная"}},
+    {path: '/users', component: Users, beforeEnter: ifAuthenticated, meta: {title: "Коллеги"}},
+    {path: '/shop', component: Shop, beforeEnter: ifAuthenticated,  meta: {title: "Маркетплейс"}},
+    {path: '/shop/:id', component: Product, beforeEnter: ifAuthenticated, meta: {title: "lol"}},
 
-  {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
-  {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},
-  {path: '/feedback', component: Feedback, beforeEnter: ifAuthenticated, meta: {title: "Обратная связь"}},
+    {path: '/rating', component: Rating, beforeEnter: ifAuthenticated, meta: {title: "Рейтинг"}},
+    {path: '/transactions', component: Transactions, beforeEnter: ifAuthenticated, meta: {title: "История операций"}},
+    {path: '/feedback', component: Feedback, beforeEnter: ifAuthenticated, meta: {title: "Обратная связь"}},
+    {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"},
+      children: [
+        {
+          path: '',
+          component: SpecialMenu,
+          meta: {title:"Cпециальные возможности"}
+        },
+        {
+          beforeEnter: ifStaff,
+          path: 'usermanagement',
+          component: UserManagement,
+          meta: {title:"Управление пользователями"}
+        },
+        {
+          beforeEnter: ifStaff,
+          path: 'marketmanagement',
+          component: MarketManagement,
+          meta: {title:"Управление маркетплейсом"}
+        },
+        {
+          beforeEnter: ifStaff,
+          path: 'inbox',
+          component: Inbox,
+          meta: {title:"Почта"}
+        },
+        {
+          beforeEnter: ifPermissioned,
+          path: 'promotions',
+          component: CategoryManagement,
+          meta: {title:"Поощерения"}
+        },
+        {
+          beforeEnter: ifStaff,
+          path: 'orders',
+          component: Orders,
+          meta: {title:"Заказы"}
+        },
+      ]},
+  ]},
 
-
-
-  {path: '/special', component: Special, beforeEnter: ifPermissioned, meta: {title: "Cпециальные возможности"},
-    children: [
-      {
-        path: '',
-        component: SpecialMenu,
-        meta: {title:"Cпециальные возможности"}
-      },
-      {
-        beforeEnter: ifStaff,
-        path: 'usermanagement',
-        component: UserManagement,
-        meta: {title:"Управление пользователями"}
-      },
-      {
-        beforeEnter: ifStaff,
-        path: 'marketmanagement',
-        component: MarketManagement,
-        meta: {title:"Управление маркетплейсом"}
-      },
-      {
-        beforeEnter: ifStaff,
-        path: 'inbox',
-        component: Inbox,
-        meta: {title:"Почта"}
-      },
-      {
-        beforeEnter: ifPermissioned,
-        path: 'promotions',
-        component: CategoryManagement,
-        meta: {title:"Поощерения"}
-      },
-      {
-        beforeEnter: ifStaff,
-        path: 'orders',
-        component: Orders,
-        meta: {title:"Заказы"}
-      },
-    ]},
 
 
 

@@ -94,6 +94,7 @@
                 let data = {'products':[]};
                 order.forEach((product, i) => data.products.push({'product':product.id, 'quantity' : this.cart.numbers[i]}));
                 this.$store.dispatch("new_order", data)
+
                 this.dialog = false;
             },
             increase(item){

@@ -88,7 +88,6 @@
                                         hint="от 8 символов"
                                         counter
                                         color="indigo"
-                                        :rules="[PasswordRules.match]"
                                         label="Повторите пароль"
                                         required
                                 ></v-text-field>
@@ -145,7 +144,6 @@
         PasswordRules: {
             required: value => !!value || 'введите пароль',
             min: v => v.length >= 8 || 'пароль менее 8 символов',
-            match: v => v === this.password1 || "не совпадают",
         },
 
         emailRules: [
@@ -153,12 +151,12 @@
             v => /.+@.+\..+/.test(v) || 'каво... непонял',
         ],
     }),
-   beforeMount() {
-            this.position = this.user.position;
-            this.last_name = this.user.last_name;
-            this.first_name = this.user.first_name;
-            this.email = this.user.email;
-            this.profile = this.user.profile;
+   created() {
+            this.position = this.user.position || '';
+            this.last_name = this.user.last_name || '';
+            this.first_name = this.user.first_name || '';
+            this.email = this.user.email || '';
+            this.profile = this.user.profile || '';
    },
         methods:{
             edit_user(){
@@ -171,7 +169,7 @@
                     "profile" : this.profile,
                     // "password" : this.password2
                 };
-                if (this.password2 != ""){
+                if (this.password2 !== ""){
                     edited.password = this.password2
                 }
 
